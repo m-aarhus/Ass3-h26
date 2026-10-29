@@ -23,6 +23,8 @@ format:
 execute:
   warning: false
   message: false
+
+abstract: (kort sammendrag)
 ---
 
 # Pakkene vi har brukt
