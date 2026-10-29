@@ -1,0 +1,68 @@
+---
+title: "Arbeidskrav 3 – Pendling i Bokna-regionen"
+subtitle: "Databehandling og analyse av pendlingsmønstre 2002–2025"
+author: "Gruppemedlemmer"
+date: last-modified
+date-format: "dddd D MMM, YYYY"
+
+lang: nb
+papersize: a4
+
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    code-fold: false
+    code-tools: true
+    number-sections: true
+
+  typst:
+    toc: true
+    number-sections: true
+
+execute:
+  warning: false
+  message: false
+---
+
+# Pakkene vi har brukt
+
+# Innledning
+
+## Bruk av KI
+
+## Kommuner i Bokna-regionen
+
+# Hente data fra SSB
+
+## Kommunesammenslåingene
+
+## Bosted rundt Boknafjorden
+
+## Arbeidssted Bokna-regionen
+
+# Totalt antall arbeidstakere i hele landet per år
+
+# Andel pendlere
+
+# Bo- og arbeidsmarkedsregioner NIBR/TØI 2020
+
+## Pendling internt i region 49
+
+# Bor og jobber i samme kommune i Bokna-regionen
+
+## Internpendling i et utvalg kommuner
+
+## Hvor jobber folk bosatt i Stavanger kommune?
+
+## Hvor jobber folk bosatt i Sandnes kommune?
+
+## Hvor jobber folk bosatt i Sola kommune?
+
+## Hvor jobber folk bosatt i Klepp kommune?
+
+## Hvor jobber folk bosatt i Haugesund kommune?
+
+## Hvor jobber folk bosatt i Karmøy kommune?
+
+# Pendlematriser
