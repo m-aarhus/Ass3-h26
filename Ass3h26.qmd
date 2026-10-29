@@ -15,7 +15,7 @@ format:
     code-fold: false
     code-tools: true
     number-sections: true
-
+  
   typst:
     toc: true
     number-sections: true
@@ -26,6 +26,12 @@ execute:
 ---
 
 # Pakkene vi har brukt
+
+```{r}
+library(tidyverse)
+library(PxWebApiData)
+library(flextable)
+```
 
 # Innledning
 
