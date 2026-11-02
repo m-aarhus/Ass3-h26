@@ -330,7 +330,7 @@ print(pend_02_25_arbBF_agg, n = 24)
 
 Resulatene tyder på at sammenslåingen stemmer, vi kan derfor endre variabelnavn fra nye_akom til akom, og tilsvarende for de andre, i pend_02_25_arbBF_agg og pend_02_25_boBF_agg.
 
-ENdrer variabelnavn pend_02_25_arbBF_agg:
+Endrer variabelnavn pend_02_25_arbBF_agg:
 
 ```{r}
 pend_02_25_arbBF_agg <- pend_02_25_arbBF_agg |>
@@ -366,6 +366,36 @@ names(pend_02_25_boBF_agg)
 ```
 
 Videre slår vi sammen pend_02_25_arbBF_agg og pend_02_25_boBF til et felles datasett ved hjelp av en rbind( ). Det er fordi vi trenger ett felles datasett som inneholder alle relevante pendingsstrømmer.
+
+Først henter vi dem som bor i Bokna-regionen og arbeider i resten av landet:
+
+```{r}
+boBF_arb_RAL <- pend_02_25_boBF_agg %>%
+  filter(akom == "k9999")
+```
+
+Deretter:
+
+```{r}
+pend_02_25 <- bind_rows(
+  pend_02_25_arbBF_agg,
+  boBF_arb_RAL
+)
+```
+
+Videre kontroller vi med følgende chunck, hvor forventet resulat er 10560 x 6:
+
+```{r}
+dim(pend_02_25)
+```
+
+For å gjøre litt rydding velger vi å kvitte oss med `arb_RAL`, `pend_02_25_arbBF`, `pend_02_25_boBF`, `pend_02_25_ssb_arbBF` og `pend_02_25_ssb_boBF`.
+
+```{r}
+rm(boBF_arb_RAL, pend_02_25_arbBF, pend_02_25_boBF, 
+   pend_02_25_ssb_arbBF, pend_02_25_ssb_boBF
+)
+```
 
 # Totalt antall arbeidstakere i hele landet per år
 
