@@ -39,7 +39,61 @@ library(flextable)
 
 ## Kommuner i Bokna-regionen
 
+Vi starter med å definere kommunene som inngår i Bokna-regionen. Datasettet omfatter både tidligere og nåværende kommunenummer, ettersom det har vært flere kommunesammenslåinger og endringer i kommuneinndelingen i perioden 2002-2025. Ved å inkludere de tidligere kommunene kan vi senere aggregere dataene til en felles kommunestruktur, som vil gjøre utviklingen over tid mer sammenlignbar.
+
+Nedenfor vises kommunenumre for Bokna-regionen, som inkluderer både gamle og nye kommunenumre.
+
+```{r}
+# Kommunenumre for Bokna-regionen
+# Inkluderer både gamle og nye kommunenumre
+
+rm(knr)
+knr <- as.character(c(1102, 1103, 1108, 1124, 1127, 1120, 1122, 1121, 1119,
+                      1144, 1130, 1106, 1146, 1149, 1216, 4612, 1145, 1133,
+                      1134, 1135, 1154, 1160, 1211, 4611, 1129, 1141, 1142))
+class(knr); length(knr)
+```
+
+```{r}
+knavn <- c("Sandnes (-2019)", "Stavanger", "Nye-Sandnes", 
+           "Sola", "Randaberg", "Klepp", "Gjesdal", "Time", 
+           "Hå", "Kvitsøy", "Strand", "Haugesund", "Tysvær", 
+           "Karmøy", "Sveio (-2019)", "Sveio", "Bokn", 
+           "Hjelmeland", "Suldal", "Sauda", "Vindafjord (-2006)", 
+           "Vindafjord", "Etne (-2019)", "Etne", 
+           "Forsand (-2019)", "Finnøy (-2020)",
+           "Rennesøy (-2020)"
+)
+```
+
 # Hente data fra SSB
+
+```{r}
+#Get more info about table
+ApiData(
+  "http://data.ssb.no/api/v0/en/table/03321",
+  returnApiQuery = TRUE
+) 
+```
+
+```{r}
+pend_02_25_ssb_boBF <- ApiData12(
+  urlToData = "03321",
+  ArbstedKomm = list('*'),
+  Bokommuen = knr, # Merk skrivemåten
+  Tid = as.character(2002:2025)
+)
+```
+
+```{r}
+View(pend_02_25_ssb_boBF)
+
+names(pend_02_25_ssb_boBF)
+
+dim(pend_02_25_ssb_boBF)
+
+head(pend_02_25_ssb_boBF)
+```
 
 ## Kommunesammenslåingene
 
