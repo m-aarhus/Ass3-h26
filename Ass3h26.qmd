@@ -95,11 +95,277 @@ dim(pend_02_25_ssb_boBF)
 head(pend_02_25_ssb_boBF)
 ```
 
+Pednledataene ble hentet fra Statistisk sentralbyrås tabell 03321 ved hjelp av funksjonen ApiData12 ( ) fra pakken PxWebApiData. Vi hentet data for perioden 2002-2025, med bosted begrenset til kommunene i Bokna-regionen og arbeidssted fordelt på alle kommuner i landet. Dette gir oss informasjon om hvor personer bosatt i Bokna-regionen arbeider, både innenfor og utenfor regionen.
+
+```{r}
+#| cache: true
+
+pend_02_25_ssb_arbBF <- ApiData12(
+  urlToData = "03321",
+  ArbstedKomm = knr,
+  Bokommuen = list('*'),
+  Tid = as.character(2002:2025)
+)
+```
+
+```{r}
+View(pend_02_25_ssb_arbBF)
+
+names(pend_02_25_ssb_arbBF)
+
+dim(pend_02_25_ssb_arbBF)
+```
+
+Vi hentet deretter et tilsvarende datasett for personer som arbeider i Bokna-regionen. Her ble arbeidssted begrenset til kommunene i regionen, mens bosted omfatter alle kommuner i landet. Ved å kombinere disse to datasattene får vi informasjon om både innpendling til og utpendling fra Bokna-regionen.
+
+```{r}
+pend_02_25_boBF <- pend_02_25_ssb_boBF %>%
+  mutate(
+    akom_navn = arbeidsstedskommune,
+    bkom_navn = bostedskommune,
+    akom = paste("k", ArbstedKomm, sep = ""),
+    bkom = paste("k", Bokommuen, sep = ""),
+    
+    # Skifter navn og nummer for Etne og Sveio
+    akom = ifelse(akom == "k1211", "k4611", akom),
+    akom = ifelse(akom == "k1216", "k4612", akom),
+    bkom = ifelse(bkom == "k1211", "k4611", bkom),
+    bkom = ifelse(bkom == "k1216", "k4612", bkom),
+    
+    akom_navn = ifelse(akom_navn == "Etne (-2019)", "Etne", akom_navn),
+    akom_navn = ifelse(akom_navn == "Sveio (-2019)", "Sveio", akom_navn),
+    bkom_navn = ifelse(bkom_navn == "Etne (-2019)", "Etne", bkom_navn),
+    bkom_navn = ifelse(bkom_navn == "Sveio (-2019)", "Sveio", bkom_navn)
+  ) %>%
+  rename(
+    aar = Tid,
+    pendlere = value
+  ) %>%
+  select(aar, akom, akom_navn, bkom, bkom_navn, pendlere) %>%
+  as_tibble()
+```
+
+```{r}
+print(pend_02_25_boBF, n = 5)
+```
+
+```{r}
+pend_02_25_arbBF <- pend_02_25_ssb_arbBF %>%
+  mutate(
+    akom_navn = arbeidsstedskommune,
+    bkom_navn = bostedskommune,
+    akom = paste("k", ArbstedKomm, sep = ""),
+    bkom = paste("k", Bokommuen, sep = ""),
+    
+    akom = ifelse(akom == "k1211", "k4611", akom),
+    akom = ifelse(akom == "k1216", "k4612", akom),
+    bkom = ifelse(bkom == "k1211", "k4611", bkom),
+    bkom = ifelse(bkom == "k1216", "k4612", bkom),
+    
+    akom_navn = ifelse(akom_navn == "Etne (-2019)", "Etne", akom_navn),
+    akom_navn = ifelse(akom_navn == "Sveio (-2019)", "Sveio", akom_navn),
+    bkom_navn = ifelse(bkom_navn == "Etne (-2019)", "Etne", bkom_navn),
+    bkom_navn = ifelse(bkom_navn == "Sveio (-2019)", "Sveio", bkom_navn)
+  ) %>%
+  rename(
+    aar = Tid,
+    pendlere = value
+  ) %>%
+  select(aar, akom, akom_navn, bkom, bkom_navn, pendlere) %>%
+  as_tibble()
+```
+
+```{r}
+print(pend_02_25_arbBF, n = 5)
+```
+
+Etter at dataene var hentet fra SSB, utarbeidet vi datasettene slik at de fikk samme struktur. Vi endret kolonnenavn, beholdt de relevante variablene og tilpasset kommunenavn for Etne og Sveio. Dette var nødvendig fordi begge kommunene fikk nye kommunenummer i 2020. På denne måten kan pedledata fra ulike år sammenlignes innenfor en felles kommuneinndeling. Dette har vi gjort både for datasettet pend_02_25_ssb_arbBF og pend_02_25_ssb_boBF.
+
 ## Kommunesammenslåingene
+
+Videre er det nødvendig å opprette en felles kommunestruktur for hele perioden 2002-2025. Det vil si at kommuner som tidligere var selvstendige, må slås sammen i datasettet. Vi er har derfor laget en liste over kommunene som ikke skal slås sammen.
+
+```{r}
+knr_u_SSV <- paste(
+  "k",
+  c(
+    1124, 1127, 1120, 1122, 1121, 1119,
+    1144, 1130, 1106, 1146, 1149, 1145,
+    1133, 1134, 1135, 1102, 4611, 4612
+  ),
+  sep = ""
+)
+```
 
 ## Bosted rundt Boknafjorden
 
+Deretter legger vi til nye kommunenummer. Dette innebærer blant annet sammenslåing av tidligere Sandes og Forsand, Stavanger med Finnøy og Rennesøy, samt Vindafjord og Ølen. Vi tar utgangspunkt i pend_02_25 og lager nye_bkom, nye_bkom_navn, nye_akom og nye_akom_navn der verdiene avhenger av hvilket nummer/navn kommunene hadde i utgangspunktet. Kommuner utenfor Bokna-regionen ble samlet i kategorien RAL, som står for Resten Av Landet.
+
+```{r}
+pend_02_25_boBF <- pend_02_25_boBF %>% 
+  mutate(
+    nye_bkom = case_when(
+      bkom %in% c("k1102", "k1108", "k1129") ~ "k1108",
+      bkom %in% c("k1103", "k1141", "k1142") ~ "k1103",
+      bkom %in% c("k1154", "k1159", "k1160") ~ "k1160",
+      # Øvrige  Bokna-region beholder sin bkom
+      TRUE ~ bkom
+    ),
+    nye_bkom_navn = case_when(
+      bkom %in% c("k1102", "k1108", "k1129") ~ "Sandnes",
+      bkom %in% c("k1103", "k1141", "k1142") ~ "Stavanger",
+      bkom %in% c("k1154", "k1159", "k1160") ~ "Vindafjord",
+      # Øvrige  Bokna-region beholder sitt bkom_navn
+      TRUE ~ bkom_navn
+    ),
+    nye_akom = case_when(
+      akom %in% c("k1102", "k1108", "k1129") ~ "k1108",
+      akom %in% c("k1103", "k1141", "k1142") ~ "k1103",
+      akom %in% c("k1154", "k1159", "k1160") ~ "k1160",
+      # Øvrige  Bokna-regionen beholder sin akom
+      akom %in% knr_u_SSV ~ akom,   
+      # Resten av landet kodes som knr "9999"
+      TRUE ~ "k9999"
+    ),
+    nye_akom_navn = case_when(
+      akom %in% c("k1102", "k1108", "k1129") ~ "Sandnes",
+      akom %in% c("k1103", "k1141", "k1142") ~ "Stavanger",
+      akom %in% c("k1154", "k1159", "k1160") ~ "Vindafjord",
+      # Øvrige Bokna-regionen beholder sitt akom_navn
+      akom %in% knr_u_SSV ~ akom_navn,  
+      # Resten av landet kodes som knr "RAL"
+      TRUE ~ "RAL"
+    )
+  )
+```
+
+Deretter bruker vi group_by( ) og summerise( ) for å summere antall pendlere innenfor den nye kommuneinndelingen.
+
+```{r}
+pend_02_25_boBF_agg <- pend_02_25_boBF %>%
+  group_by(
+    aar,
+    nye_akom,
+    nye_akom_navn,
+    nye_bkom,
+    nye_bkom_navn
+  ) %>%
+  summarise(
+    pendlere = sum(pendlere, na.rm = TRUE),
+    .groups = "drop"
+  )
+```
+
+```{r}
+dim(pend_02_25_boBF_agg)
+```
+
+For å sjekke at resulatene er riktige kjører vi chunken ovenfor. Her får vi resulatet: 10 080 rader og 6 kolonner. Det vil si at sammenslåingen fungerer for denne kombinasjonen.
+
+```{r}
+print(pend_02_25_boBF_agg, n  = 24)
+```
+
 ## Arbeidssted Bokna-regionen
+
+Vi gjør tilsvarende for arbeidsstedsdatasettet (pend_02_25_arbBF). Her gjør vi samme aggregering som ovenfor.
+
+```{r}
+pend_02_25_arbBF <- pend_02_25_arbBF %>%
+  mutate(
+    nye_akom = case_when(
+      akom %in% c("k1102", "k1108", "k1129") ~ "k1108",
+      akom %in% c("k1103", "k1141", "k1142") ~ "k1103",
+      akom %in% c("k1154", "k1159", "k1160") ~ "k1160",
+      TRUE ~ akom
+    ),
+    
+    nye_akom_navn = case_when(
+      akom %in% c("k1102", "k1108", "k1129") ~ "Sandnes",
+      akom %in% c("k1103", "k1141", "k1142") ~ "Stavanger",
+      akom %in% c("k1154", "k1159", "k1160") ~ "Vindafjord",
+      TRUE ~ akom_navn
+    ),
+    
+    nye_bkom = case_when(
+      bkom %in% c("k1102", "k1108", "k1129") ~ "k1108",
+      bkom %in% c("k1103", "k1141", "k1142") ~ "k1103",
+      bkom %in% c("k1154", "k1159", "k1160") ~ "k1160",
+      bkom %in% knr_u_SSV ~ bkom,
+      TRUE ~ "k9999"
+    ),
+    
+    nye_bkom_navn = case_when(
+      bkom %in% c("k1102", "k1108", "k1129") ~ "Sandnes",
+      bkom %in% c("k1103", "k1141", "k1142") ~ "Stavanger",
+      bkom %in% c("k1154", "k1159", "k1160") ~ "Vindafjord",
+      bkom %in% knr_u_SSV ~ bkom_navn,
+      TRUE ~ "RAL"
+    )
+  )
+```
+
+Videre er vi nødt til å aggregere dataene. Selv om vi har endret kommunenummer, må vi fortsatt ha flere rader som gjelder samme kombinasjon av år, bosted og arbeidssted. Vi bruker da group_by( ) og summarise ( ) for å summere antall pendlere innenfor den nye kommuneinndelingen.
+
+```{r}
+pend_02_25_arbBF_agg <- pend_02_25_arbBF %>%
+  group_by(
+    aar,
+    nye_akom,
+    nye_akom_navn,
+    nye_bkom,
+    nye_bkom_navn
+  ) %>%
+  summarise(
+    pendlere = sum(pendlere, na.rm = TRUE),
+    .groups = "drop"
+  )
+```
+
+Får å sjekke resulatene tar vi en test for Stavanger, som ser slik ut:
+
+```{r}
+print(pend_02_25_arbBF_agg, n = 24)
+```
+
+Resulatene tyder på at sammenslåingen stemmer, vi kan derfor endre variabelnavn fra nye_akom til akom, og tilsvarende for de andre, i pend_02_25_arbBF_agg og pend_02_25_boBF_agg.
+
+ENdrer variabelnavn pend_02_25_arbBF_agg:
+
+```{r}
+pend_02_25_arbBF_agg <- pend_02_25_arbBF_agg |>
+  rename(
+    akom = nye_akom,
+    akom_navn = nye_akom_navn,
+    bkom = nye_bkom,
+    bkom_navn = nye_bkom_navn
+  )
+```
+
+Gjør tilsvarnede for pend_02_25_boBF_agg:
+
+```{r}
+pend_02_25_boBF_agg <- pend_02_25_boBF_agg |>
+  rename(
+    akom = nye_akom,
+    akom_navn = nye_akom_navn,
+    bkom = nye_bkom,
+    bkom_navn = nye_bkom_navn
+  )
+```
+
+Denne endringen gir oss følgende navn:
+
+```{r}
+names(pend_02_25_arbBF_agg)
+
+```
+
+```{r}
+names(pend_02_25_boBF_agg)
+```
+
+Videre slår vi sammen pend_02_25_arbBF_agg og pend_02_25_boBF til et felles datasett ved hjelp av en rbind( ). Det er fordi vi trenger ett felles datasett som inneholder alle relevante pendingsstrømmer.
 
 # Totalt antall arbeidstakere i hele landet per år
 
