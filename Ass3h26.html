@@ -139,7 +139,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Utgitt</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">torsdag 29 okt., 2026</p>
+      <p class="date">mandag 2 nov., 2026</p>
     </div>
   </div>
   
@@ -162,6 +162,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="innledning" class="level1" data-number="2">
 <h1 data-number="2"><span class="header-section-number">2</span> Innledning</h1>
+<p>Pendling er en viktig del av hvordan arbeidsmarkedet fungerer, og sier mye om hvor folk bor i forhold til der de jobber. I denne oppgaven undersøker vi pendling i kommunene rundt Boknafjorden fra 2002 til 2025. Innledningen bygger på bo- og arbeidsmarkedsregionene som NIBR/TØI publiserte i 2020. Området vi ser på består av seks slike regioner med til sammen 20 kommuner, og størrelsen varierer mye, fra Stavanger/Sandnes med ti kommuner til små regioner i Ryfylke med bare en. Alle kommuner utenfor området samler vi i en gruppe, “resten av landet” (RAL), slik at vi også får med pendlingen inn til og ut av regionen.</p>
+<p>Data hentes direkte fra SSB, tabell 03321 og 11616, ved hjelp av en API gjennom pakken PxWebApiData. Et problem underveis er at flere kommuner har blitt slått sammen eller har fått nytt kommunenummer, blant annet ved kommunereformen i 2020. Vi har derfor tilpasset dataene til kommunestrukturen slik den er i 2025, så tallene kan sammenlignes over hele prioden.</p>
+<p>Ut fra det lager vi et ryddig datasett med pendlingen mellom kommunene for alle årene. Datasettet bruker vi videre til å lage linjeplot over utviklingen, tabeller over hvor folk fra utvalgte kommuner jobber, og pendlematrisen for noen utvalgte år.</p>
 <section id="bruk-av-ki" class="level2" data-number="2.1">
 <h2 data-number="2.1" class="anchored" data-anchor-id="bruk-av-ki"><span class="header-section-number">2.1</span> Bruk av KI</h2>
 </section>
@@ -708,44 +711,49 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a><span class="fu"># Pakkene vi har brukt</span></span>
 <span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="fu"># Innledning</span></span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a><span class="fu">## Bruk av KI</span></span>
-<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a><span class="fu">## Kommuner i Bokna-regionen</span></span>
-<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a><span class="fu"># Hente data fra SSB</span></span>
-<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a><span class="fu">## Kommunesammenslåingene</span></span>
-<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a><span class="fu">## Bosted rundt Boknafjorden</span></span>
-<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a><span class="fu">## Arbeidssted Bokna-regionen</span></span>
-<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a><span class="fu"># Totalt antall arbeidstakere i hele landet per år</span></span>
-<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a><span class="fu"># Andel pendlere</span></span>
-<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a><span class="fu"># Bo- og arbeidsmarkedsregioner NIBR/TØI 2020</span></span>
-<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a><span class="fu">## Pendling internt i region 49</span></span>
-<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a><span class="fu"># Bor og jobber i samme kommune i Bokna-regionen</span></span>
-<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a><span class="fu">## Internpendling i et utvalg kommuner</span></span>
-<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a><span class="fu">## Hvor jobber folk bosatt i Stavanger kommune?</span></span>
-<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a><span class="fu">## Hvor jobber folk bosatt i Sandnes kommune?</span></span>
-<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a><span class="fu">## Hvor jobber folk bosatt i Sola kommune?</span></span>
-<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a><span class="fu">## Hvor jobber folk bosatt i Klepp kommune?</span></span>
-<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a><span class="fu">## Hvor jobber folk bosatt i Haugesund kommune?</span></span>
-<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a><span class="fu">## Hvor jobber folk bosatt i Karmøy kommune?</span></span>
-<span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a><span class="fu"># Pendlematriser</span></span></code></pre></div><button title="Kopier til utklipstavle" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>Pendling er en viktig del av hvordan arbeidsmarkedet fungerer, og sier mye om hvor folk bor i forhold til der de jobber. I denne oppgaven undersøker vi pendling i kommunene rundt Boknafjorden fra 2002 til 2025. Innledningen bygger på bo- og arbeidsmarkedsregionene som NIBR/TØI publiserte i 2020. Området vi ser på består av seks slike regioner med til sammen 20 kommuner, og størrelsen varierer mye, fra Stavanger/Sandnes med ti kommuner til små regioner i Ryfylke med bare en. Alle kommuner utenfor området samler vi i en gruppe, "resten av landet" (RAL), slik at vi også får med pendlingen inn til og ut av regionen. </span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>Data hentes direkte fra SSB, tabell 03321 og 11616, ved hjelp av en API gjennom pakken PxWebApiData. Et problem underveis er at flere kommuner har blitt slått sammen eller har fått nytt kommunenummer, blant annet ved kommunereformen i 2020. Vi har derfor tilpasset dataene til kommunestrukturen slik den er i 2025, så tallene kan sammenlignes over hele prioden. </span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>Ut fra det lager vi et ryddig datasett med pendlingen mellom kommunene for alle årene. Datasettet bruker vi videre til å lage linjeplot over utviklingen, tabeller over hvor folk fra utvalgte kommuner jobber, og pendlematrisen for noen utvalgte år. </span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a><span class="fu">## Bruk av KI</span></span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a><span class="fu">## Kommuner i Bokna-regionen</span></span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a><span class="fu"># Hente data fra SSB</span></span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a><span class="fu">## Kommunesammenslåingene</span></span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a><span class="fu">## Bosted rundt Boknafjorden</span></span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a><span class="fu">## Arbeidssted Bokna-regionen</span></span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a><span class="fu"># Totalt antall arbeidstakere i hele landet per år</span></span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a><span class="fu"># Andel pendlere</span></span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a><span class="fu"># Bo- og arbeidsmarkedsregioner NIBR/TØI 2020</span></span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a><span class="fu">## Pendling internt i region 49</span></span>
+<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a><span class="fu"># Bor og jobber i samme kommune i Bokna-regionen</span></span>
+<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a><span class="fu">## Internpendling i et utvalg kommuner</span></span>
+<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a><span class="fu">## Hvor jobber folk bosatt i Stavanger kommune?</span></span>
+<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a><span class="fu">## Hvor jobber folk bosatt i Sandnes kommune?</span></span>
+<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a><span class="fu">## Hvor jobber folk bosatt i Sola kommune?</span></span>
+<span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a><span class="fu">## Hvor jobber folk bosatt i Klepp kommune?</span></span>
+<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-71"><a href="#cb1-71" aria-hidden="true" tabindex="-1"></a><span class="fu">## Hvor jobber folk bosatt i Haugesund kommune?</span></span>
+<span id="cb1-72"><a href="#cb1-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-73"><a href="#cb1-73" aria-hidden="true" tabindex="-1"></a><span class="fu">## Hvor jobber folk bosatt i Karmøy kommune?</span></span>
+<span id="cb1-74"><a href="#cb1-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-75"><a href="#cb1-75" aria-hidden="true" tabindex="-1"></a><span class="fu"># Pendlematriser</span></span></code></pre></div><button title="Kopier til utklipstavle" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 

@@ -30,6 +30,11 @@ abstract: (kort sammendrag)
 # Pakkene vi har brukt
 
 # Innledning
+Pendling er en viktig del av hvordan arbeidsmarkedet fungerer, og sier mye om hvor folk bor i forhold til der de jobber. I denne oppgaven undersøker vi pendling i kommunene rundt Boknafjorden fra 2002 til 2025. Innledningen bygger på bo- og arbeidsmarkedsregionene som NIBR/TØI publiserte i 2020. Området vi ser på består av seks slike regioner med til sammen 20 kommuner, og størrelsen varierer mye, fra Stavanger/Sandnes med ti kommuner til små regioner i Ryfylke med bare en. Alle kommuner utenfor området samler vi i en gruppe, "resten av landet" (RAL), slik at vi også får med pendlingen inn til og ut av regionen. 
+
+Data hentes direkte fra SSB, tabell 03321 og 11616, ved hjelp av en API gjennom pakken PxWebApiData. Et problem underveis er at flere kommuner har blitt slått sammen eller har fått nytt kommunenummer, blant annet ved kommunereformen i 2020. Vi har derfor tilpasset dataene til kommunestrukturen slik den er i 2025, så tallene kan sammenlignes over hele prioden. 
+
+Ut fra det lager vi et ryddig datasett med pendlingen mellom kommunene for alle årene. Datasettet bruker vi videre til å lage linjeplot over utviklingen, tabeller over hvor folk fra utvalgte kommuner jobber, og pendlematrisen for noen utvalgte år. 
 
 ## Bruk av KI
 
