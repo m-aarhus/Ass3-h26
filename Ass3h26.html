@@ -97,7 +97,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#bosted-rundt-boknafjorden" id="toc-bosted-rundt-boknafjorden" class="nav-link" data-scroll-target="#bosted-rundt-boknafjorden"><span class="header-section-number">3.2</span> Bosted rundt Boknafjorden</a></li>
   <li><a href="#arbeidssted-bokna-regionen" id="toc-arbeidssted-bokna-regionen" class="nav-link" data-scroll-target="#arbeidssted-bokna-regionen"><span class="header-section-number">3.3</span> Arbeidssted Bokna-regionen</a></li>
   </ul></li>
-  <li><a href="#totalt-antall-arbeidstakere-i-hele-landet-per-år" id="toc-totalt-antall-arbeidstakere-i-hele-landet-per-år" class="nav-link" data-scroll-target="#totalt-antall-arbeidstakere-i-hele-landet-per-år"><span class="header-section-number">4</span> Totalt antall arbeidstakere i hele landet per år</a></li>
+  <li><a href="#totalt-antall-arbeidstakere-i-hele-landet-per-år" id="toc-totalt-antall-arbeidstakere-i-hele-landet-per-år" class="nav-link" data-scroll-target="#totalt-antall-arbeidstakere-i-hele-landet-per-år"><span class="header-section-number">4</span> Totalt antall arbeidstakere i hele landet per år</a>
+  <ul class="collapse">
+  <li><a href="#bor-i-bokna-regionen-jobber-i-hl" id="toc-bor-i-bokna-regionen-jobber-i-hl" class="nav-link" data-scroll-target="#bor-i-bokna-regionen-jobber-i-hl"><span class="header-section-number">4.1</span> Bor i Bokna-regionen, jobber i HL</a></li>
+  <li><a href="#bor-i-ral-jobber-i-bokna-regionen" id="toc-bor-i-ral-jobber-i-bokna-regionen" class="nav-link" data-scroll-target="#bor-i-ral-jobber-i-bokna-regionen"><span class="header-section-number">4.2</span> Bor i RAL jobber i Bokna-regionen</a></li>
+  <li><a href="#beregne-ral" id="toc-beregne-ral" class="nav-link" data-scroll-target="#beregne-ral"><span class="header-section-number">4.3</span> Beregne RAL</a></li>
+  </ul></li>
   <li><a href="#andel-pendlere" id="toc-andel-pendlere" class="nav-link" data-scroll-target="#andel-pendlere"><span class="header-section-number">5</span> Andel pendlere</a></li>
   <li><a href="#bo--og-arbeidsmarkedsregioner-nibrtøi-2020" id="toc-bo--og-arbeidsmarkedsregioner-nibrtøi-2020" class="nav-link" data-scroll-target="#bo--og-arbeidsmarkedsregioner-nibrtøi-2020"><span class="header-section-number">6</span> Bo- og arbeidsmarkedsregioner NIBR/TØI 2020</a>
   <ul class="collapse">
@@ -139,7 +144,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Utgitt</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">mandag 2 nov., 2026</p>
+      <p class="date">onsdag 4 nov., 2026</p>
     </div>
   </div>
   
@@ -159,6 +164,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="pakkene-vi-har-brukt" class="level1" data-number="1">
 <h1 data-number="1"><span class="header-section-number">1</span> Pakkene vi har brukt</h1>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(PxWebApiData)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co">#library(flextable)</span></span></code></pre></div><button title="Kopier til utklipstavle" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </section>
 <section id="innledning" class="level1" data-number="2">
 <h1 data-number="2"><span class="header-section-number">2</span> Innledning</h1>
@@ -170,22 +180,627 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="kommuner-i-bokna-regionen" class="level2" data-number="2.2">
 <h2 data-number="2.2" class="anchored" data-anchor-id="kommuner-i-bokna-regionen"><span class="header-section-number">2.2</span> Kommuner i Bokna-regionen</h2>
+<p>Vi starter med å definere kommunene som inngår i Bokna-regionen. Datasettet omfatter både tidligere og nåværende kommunenummer, ettersom det har vært flere kommunesammenslåinger og endringer i kommuneinndelingen i perioden 2002-2025. Ved å inkludere de tidligere kommunene kan vi senere aggregere dataene til en felles kommunestruktur, som vil gjøre utviklingen over tid mer sammenlignbar.</p>
+<p>Nedenfor vises kommunenumre for Bokna-regionen, som inkluderer både gamle og nye kommunenumre.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Kommunenumre for Bokna-regionen</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Inkluderer både gamle og nye kommunenumre</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(knr)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>knr <span class="ot">&lt;-</span> <span class="fu">as.character</span>(<span class="fu">c</span>(<span class="dv">1102</span>, <span class="dv">1103</span>, <span class="dv">1108</span>, <span class="dv">1124</span>, <span class="dv">1127</span>, <span class="dv">1120</span>, <span class="dv">1122</span>, <span class="dv">1121</span>, <span class="dv">1119</span>,</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>                      <span class="dv">1144</span>, <span class="dv">1130</span>, <span class="dv">1106</span>, <span class="dv">1146</span>, <span class="dv">1149</span>, <span class="dv">1216</span>, <span class="dv">4612</span>, <span class="dv">1145</span>, <span class="dv">1133</span>,</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>                      <span class="dv">1134</span>, <span class="dv">1135</span>, <span class="dv">1154</span>, <span class="dv">1160</span>, <span class="dv">1211</span>, <span class="dv">4611</span>, <span class="dv">1129</span>, <span class="dv">1141</span>, <span class="dv">1142</span>))</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(knr); <span class="fu">length</span>(knr)</span></code></pre></div><button title="Kopier til utklipstavle" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "character"</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 27</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>knavn <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Sandnes (-2019)"</span>, <span class="st">"Stavanger"</span>, <span class="st">"Nye-Sandnes"</span>, </span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>           <span class="st">"Sola"</span>, <span class="st">"Randaberg"</span>, <span class="st">"Klepp"</span>, <span class="st">"Gjesdal"</span>, <span class="st">"Time"</span>, </span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>           <span class="st">"Hå"</span>, <span class="st">"Kvitsøy"</span>, <span class="st">"Strand"</span>, <span class="st">"Haugesund"</span>, <span class="st">"Tysvær"</span>, </span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>           <span class="st">"Karmøy"</span>, <span class="st">"Sveio (-2019)"</span>, <span class="st">"Sveio"</span>, <span class="st">"Bokn"</span>, </span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>           <span class="st">"Hjelmeland"</span>, <span class="st">"Suldal"</span>, <span class="st">"Sauda"</span>, <span class="st">"Vindafjord (-2006)"</span>, </span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>           <span class="st">"Vindafjord"</span>, <span class="st">"Etne (-2019)"</span>, <span class="st">"Etne"</span>, </span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>           <span class="st">"Forsand (-2019)"</span>, <span class="st">"Finnøy (-2020)"</span>,</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>           <span class="st">"Rennesøy (-2020)"</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Kopier til utklipstavle" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </section>
 </section>
 <section id="hente-data-fra-ssb" class="level1" data-number="3">
 <h1 data-number="3"><span class="header-section-number">3</span> Hente data fra SSB</h1>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Get more info about table</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ApiData</span>(</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"http://data.ssb.no/api/v0/en/table/03321"</span>,</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">returnApiQuery =</span> <span class="cn">TRUE</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>) </span></code></pre></div><button title="Kopier til utklipstavle" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>{
+  "query": [
+    {
+      "code": "ArbstedKomm",
+      "selection": {
+        "filter": "item",
+        "values": ["3101", "2321", "9999"]
+      }
+    },
+    {
+      "code": "Bokommuen",
+      "selection": {
+        "filter": "item",
+        "values": ["3101", "2321", "9999"]
+      }
+    },
+    {
+      "code": "ContentsCode",
+      "selection": {
+        "filter": "item",
+        "values": ["Sysselsatte"]
+      }
+    },
+    {
+      "code": "Tid",
+      "selection": {
+        "filter": "item",
+        "values": ["2000", "2024", "2025"]
+      }
+    }
+  ],
+  "response": {
+    "format": "json-stat2"
+  }
+} </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>pend_02_25_ssb_boBF <span class="ot">&lt;-</span> <span class="fu">ApiData12</span>(</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">urlToData =</span> <span class="st">"03321"</span>,</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">ArbstedKomm =</span> <span class="fu">list</span>(<span class="st">'*'</span>),</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">Bokommuen =</span> knr, <span class="co"># Merk skrivemåten</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">Tid =</span> <span class="fu">as.character</span>(<span class="dv">2002</span><span class="sc">:</span><span class="dv">2025</span>)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Kopier til utklipstavle" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">View</span>(pend_02_25_ssb_boBF)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(pend_02_25_ssb_boBF)</span></code></pre></div><button title="Kopier til utklipstavle" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "arbeidsstedskommune" "bostedskommune"      "statistikkvariabel" 
+[4] "år"                  "ArbstedKomm"         "Bokommuen"          
+[7] "ContentsCode"        "Tid"                 "value"              </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(pend_02_25_ssb_boBF)</span></code></pre></div><button title="Kopier til utklipstavle" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 552744      9</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(pend_02_25_ssb_boBF)</span></code></pre></div><button title="Kopier til utklipstavle" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  arbeidsstedskommune  bostedskommune   statistikkvariabel   år ArbstedKomm
+1              Halden Sandnes (-2019) Sysselsatte personer 2002        3101
+2              Halden Sandnes (-2019) Sysselsatte personer 2003        3101
+3              Halden Sandnes (-2019) Sysselsatte personer 2004        3101
+4              Halden Sandnes (-2019) Sysselsatte personer 2005        3101
+5              Halden Sandnes (-2019) Sysselsatte personer 2006        3101
+6              Halden Sandnes (-2019) Sysselsatte personer 2007        3101
+  Bokommuen ContentsCode  Tid value
+1      1102  Sysselsatte 2002     0
+2      1102  Sysselsatte 2003     0
+3      1102  Sysselsatte 2004     0
+4      1102  Sysselsatte 2005     0
+5      1102  Sysselsatte 2006     0
+6      1102  Sysselsatte 2007     0</code></pre>
+</div>
+</div>
+<p>Pednledataene ble hentet fra Statistisk sentralbyrås tabell 03321 ved hjelp av funksjonen ApiData12 ( ) fra pakken PxWebApiData. Vi hentet data for perioden 2002-2025, med bosted begrenset til kommunene i Bokna-regionen og arbeidssted fordelt på alle kommuner i landet. Dette gir oss informasjon om hvor personer bosatt i Bokna-regionen arbeider, både innenfor og utenfor regionen.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>pend_02_25_ssb_arbBF <span class="ot">&lt;-</span> <span class="fu">ApiData12</span>(</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">urlToData =</span> <span class="st">"03321"</span>,</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">ArbstedKomm =</span> knr,</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">Bokommuen =</span> <span class="fu">list</span>(<span class="st">'*'</span>),</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">Tid =</span> <span class="fu">as.character</span>(<span class="dv">2002</span><span class="sc">:</span><span class="dv">2025</span>)</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Kopier til utklipstavle" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">View</span>(pend_02_25_ssb_arbBF)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(pend_02_25_ssb_arbBF)</span></code></pre></div><button title="Kopier til utklipstavle" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "arbeidsstedskommune" "bostedskommune"      "statistikkvariabel" 
+[4] "år"                  "ArbstedKomm"         "Bokommuen"          
+[7] "ContentsCode"        "Tid"                 "value"              </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(pend_02_25_ssb_arbBF)</span></code></pre></div><button title="Kopier til utklipstavle" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 552744      9</code></pre>
+</div>
+</div>
+<p>Vi hentet deretter et tilsvarende datasett for personer som arbeider i Bokna-regionen. Her ble arbeidssted begrenset til kommunene i regionen, mens bosted omfatter alle kommuner i landet. Ved å kombinere disse to datasattene får vi informasjon om både innpendling til og utpendling fra Bokna-regionen.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>pend_02_25_boBF <span class="ot">&lt;-</span> pend_02_25_ssb_boBF <span class="sc">%&gt;%</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">akom_navn =</span> arbeidsstedskommune,</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">bkom_navn =</span> bostedskommune,</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">akom =</span> <span class="fu">paste</span>(<span class="st">"k"</span>, ArbstedKomm, <span class="at">sep =</span> <span class="st">""</span>),</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">bkom =</span> <span class="fu">paste</span>(<span class="st">"k"</span>, Bokommuen, <span class="at">sep =</span> <span class="st">""</span>),</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Skifter navn og nummer for Etne og Sveio</span></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">akom =</span> <span class="fu">ifelse</span>(akom <span class="sc">==</span> <span class="st">"k1211"</span>, <span class="st">"k4611"</span>, akom),</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">akom =</span> <span class="fu">ifelse</span>(akom <span class="sc">==</span> <span class="st">"k1216"</span>, <span class="st">"k4612"</span>, akom),</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">bkom =</span> <span class="fu">ifelse</span>(bkom <span class="sc">==</span> <span class="st">"k1211"</span>, <span class="st">"k4611"</span>, bkom),</span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">bkom =</span> <span class="fu">ifelse</span>(bkom <span class="sc">==</span> <span class="st">"k1216"</span>, <span class="st">"k4612"</span>, bkom),</span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">akom_navn =</span> <span class="fu">ifelse</span>(akom_navn <span class="sc">==</span> <span class="st">"Etne (-2019)"</span>, <span class="st">"Etne"</span>, akom_navn),</span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">akom_navn =</span> <span class="fu">ifelse</span>(akom_navn <span class="sc">==</span> <span class="st">"Sveio (-2019)"</span>, <span class="st">"Sveio"</span>, akom_navn),</span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">bkom_navn =</span> <span class="fu">ifelse</span>(bkom_navn <span class="sc">==</span> <span class="st">"Etne (-2019)"</span>, <span class="st">"Etne"</span>, bkom_navn),</span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">bkom_navn =</span> <span class="fu">ifelse</span>(bkom_navn <span class="sc">==</span> <span class="st">"Sveio (-2019)"</span>, <span class="st">"Sveio"</span>, bkom_navn)</span>
+<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(</span>
+<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">aar =</span> Tid,</span>
+<span id="cb20-21"><a href="#cb20-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">pendlere =</span> value</span>
+<span id="cb20-22"><a href="#cb20-22" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb20-23"><a href="#cb20-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(aar, akom, akom_navn, bkom, bkom_navn, pendlere) <span class="sc">%&gt;%</span></span>
+<span id="cb20-24"><a href="#cb20-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>()</span></code></pre></div><button title="Kopier til utklipstavle" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(pend_02_25_boBF, <span class="at">n =</span> <span class="dv">5</span>)</span></code></pre></div><button title="Kopier til utklipstavle" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 552,744 × 6
+  aar   akom  akom_navn bkom  bkom_navn       pendlere
+  &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt; &lt;chr&gt;              &lt;int&gt;
+1 2002  k3101 Halden    k1102 Sandnes (-2019)        0
+2 2003  k3101 Halden    k1102 Sandnes (-2019)        0
+3 2004  k3101 Halden    k1102 Sandnes (-2019)        0
+4 2005  k3101 Halden    k1102 Sandnes (-2019)        0
+5 2006  k3101 Halden    k1102 Sandnes (-2019)        0
+# ℹ 552,739 more rows</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>pend_02_25_arbBF <span class="ot">&lt;-</span> pend_02_25_ssb_arbBF <span class="sc">%&gt;%</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">akom_navn =</span> arbeidsstedskommune,</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">bkom_navn =</span> bostedskommune,</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">akom =</span> <span class="fu">paste</span>(<span class="st">"k"</span>, ArbstedKomm, <span class="at">sep =</span> <span class="st">""</span>),</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">bkom =</span> <span class="fu">paste</span>(<span class="st">"k"</span>, Bokommuen, <span class="at">sep =</span> <span class="st">""</span>),</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">akom =</span> <span class="fu">ifelse</span>(akom <span class="sc">==</span> <span class="st">"k1211"</span>, <span class="st">"k4611"</span>, akom),</span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">akom =</span> <span class="fu">ifelse</span>(akom <span class="sc">==</span> <span class="st">"k1216"</span>, <span class="st">"k4612"</span>, akom),</span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">bkom =</span> <span class="fu">ifelse</span>(bkom <span class="sc">==</span> <span class="st">"k1211"</span>, <span class="st">"k4611"</span>, bkom),</span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">bkom =</span> <span class="fu">ifelse</span>(bkom <span class="sc">==</span> <span class="st">"k1216"</span>, <span class="st">"k4612"</span>, bkom),</span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">akom_navn =</span> <span class="fu">ifelse</span>(akom_navn <span class="sc">==</span> <span class="st">"Etne (-2019)"</span>, <span class="st">"Etne"</span>, akom_navn),</span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">akom_navn =</span> <span class="fu">ifelse</span>(akom_navn <span class="sc">==</span> <span class="st">"Sveio (-2019)"</span>, <span class="st">"Sveio"</span>, akom_navn),</span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">bkom_navn =</span> <span class="fu">ifelse</span>(bkom_navn <span class="sc">==</span> <span class="st">"Etne (-2019)"</span>, <span class="st">"Etne"</span>, bkom_navn),</span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">bkom_navn =</span> <span class="fu">ifelse</span>(bkom_navn <span class="sc">==</span> <span class="st">"Sveio (-2019)"</span>, <span class="st">"Sveio"</span>, bkom_navn)</span>
+<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(</span>
+<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">aar =</span> Tid,</span>
+<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">pendlere =</span> value</span>
+<span id="cb23-21"><a href="#cb23-21" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb23-22"><a href="#cb23-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(aar, akom, akom_navn, bkom, bkom_navn, pendlere) <span class="sc">%&gt;%</span></span>
+<span id="cb23-23"><a href="#cb23-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>()</span></code></pre></div><button title="Kopier til utklipstavle" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(pend_02_25_arbBF, <span class="at">n =</span> <span class="dv">5</span>)</span></code></pre></div><button title="Kopier til utklipstavle" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 552,744 × 6
+  aar   akom  akom_navn       bkom  bkom_navn pendlere
+  &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;           &lt;chr&gt; &lt;chr&gt;        &lt;int&gt;
+1 2002  k1102 Sandnes (-2019) k3101 Halden           0
+2 2003  k1102 Sandnes (-2019) k3101 Halden           0
+3 2004  k1102 Sandnes (-2019) k3101 Halden           0
+4 2005  k1102 Sandnes (-2019) k3101 Halden           0
+5 2006  k1102 Sandnes (-2019) k3101 Halden           0
+# ℹ 552,739 more rows</code></pre>
+</div>
+</div>
+<p>Etter at dataene var hentet fra SSB, utarbeidet vi datasettene slik at de fikk samme struktur. Vi endret kolonnenavn, beholdt de relevante variablene og tilpasset kommunenavn for Etne og Sveio. Dette var nødvendig fordi begge kommunene fikk nye kommunenummer i 2020. På denne måten kan pedledata fra ulike år sammenlignes innenfor en felles kommuneinndeling. Dette har vi gjort både for datasettet pend_02_25_ssb_arbBF og pend_02_25_ssb_boBF.</p>
 <section id="kommunesammenslåingene" class="level2" data-number="3.1">
 <h2 data-number="3.1" class="anchored" data-anchor-id="kommunesammenslåingene"><span class="header-section-number">3.1</span> Kommunesammenslåingene</h2>
+<p>Videre er det nødvendig å opprette en felles kommunestruktur for hele perioden 2002-2025. Det vil si at kommuner som tidligere var selvstendige, må slås sammen i datasettet. Vi er har derfor laget en liste over kommunene som ikke skal slås sammen.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>knr_u_SSV <span class="ot">&lt;-</span> <span class="fu">paste</span>(</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"k"</span>,</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>    <span class="dv">1124</span>, <span class="dv">1127</span>, <span class="dv">1120</span>, <span class="dv">1122</span>, <span class="dv">1121</span>, <span class="dv">1119</span>,</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>    <span class="dv">1144</span>, <span class="dv">1130</span>, <span class="dv">1106</span>, <span class="dv">1146</span>, <span class="dv">1149</span>, <span class="dv">1145</span>,</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>    <span class="dv">1133</span>, <span class="dv">1134</span>, <span class="dv">1135</span>, <span class="dv">1102</span>, <span class="dv">4611</span>, <span class="dv">4612</span></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">sep =</span> <span class="st">""</span></span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Kopier til utklipstavle" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </section>
 <section id="bosted-rundt-boknafjorden" class="level2" data-number="3.2">
 <h2 data-number="3.2" class="anchored" data-anchor-id="bosted-rundt-boknafjorden"><span class="header-section-number">3.2</span> Bosted rundt Boknafjorden</h2>
+<p>Deretter legger vi til nye kommunenummer. Dette innebærer blant annet sammenslåing av tidligere Sandes og Forsand, Stavanger med Finnøy og Rennesøy, samt Vindafjord og Ølen. Vi tar utgangspunkt i pend_02_25 og lager nye_bkom, nye_bkom_navn, nye_akom og nye_akom_navn der verdiene avhenger av hvilket nummer/navn kommunene hadde i utgangspunktet. Kommuner utenfor Bokna-regionen ble samlet i kategorien RAL, som står for Resten Av Landet.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>pend_02_25_boBF <span class="ot">&lt;-</span> pend_02_25_boBF <span class="sc">%&gt;%</span> </span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">nye_bkom =</span> <span class="fu">case_when</span>(</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>      bkom <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"k1102"</span>, <span class="st">"k1108"</span>, <span class="st">"k1129"</span>) <span class="sc">~</span> <span class="st">"k1108"</span>,</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>      bkom <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"k1103"</span>, <span class="st">"k1141"</span>, <span class="st">"k1142"</span>) <span class="sc">~</span> <span class="st">"k1103"</span>,</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>      bkom <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"k1154"</span>, <span class="st">"k1159"</span>, <span class="st">"k1160"</span>) <span class="sc">~</span> <span class="st">"k1160"</span>,</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Øvrige  Bokna-region beholder sin bkom</span></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>      <span class="cn">TRUE</span> <span class="sc">~</span> bkom</span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">nye_bkom_navn =</span> <span class="fu">case_when</span>(</span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>      bkom <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"k1102"</span>, <span class="st">"k1108"</span>, <span class="st">"k1129"</span>) <span class="sc">~</span> <span class="st">"Sandnes"</span>,</span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>      bkom <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"k1103"</span>, <span class="st">"k1141"</span>, <span class="st">"k1142"</span>) <span class="sc">~</span> <span class="st">"Stavanger"</span>,</span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a>      bkom <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"k1154"</span>, <span class="st">"k1159"</span>, <span class="st">"k1160"</span>) <span class="sc">~</span> <span class="st">"Vindafjord"</span>,</span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Øvrige  Bokna-region beholder sitt bkom_navn</span></span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a>      <span class="cn">TRUE</span> <span class="sc">~</span> bkom_navn</span>
+<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">nye_akom =</span> <span class="fu">case_when</span>(</span>
+<span id="cb27-18"><a href="#cb27-18" aria-hidden="true" tabindex="-1"></a>      akom <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"k1102"</span>, <span class="st">"k1108"</span>, <span class="st">"k1129"</span>) <span class="sc">~</span> <span class="st">"k1108"</span>,</span>
+<span id="cb27-19"><a href="#cb27-19" aria-hidden="true" tabindex="-1"></a>      akom <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"k1103"</span>, <span class="st">"k1141"</span>, <span class="st">"k1142"</span>) <span class="sc">~</span> <span class="st">"k1103"</span>,</span>
+<span id="cb27-20"><a href="#cb27-20" aria-hidden="true" tabindex="-1"></a>      akom <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"k1154"</span>, <span class="st">"k1159"</span>, <span class="st">"k1160"</span>) <span class="sc">~</span> <span class="st">"k1160"</span>,</span>
+<span id="cb27-21"><a href="#cb27-21" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Øvrige  Bokna-regionen beholder sin akom</span></span>
+<span id="cb27-22"><a href="#cb27-22" aria-hidden="true" tabindex="-1"></a>      akom <span class="sc">%in%</span> knr_u_SSV <span class="sc">~</span> akom,   </span>
+<span id="cb27-23"><a href="#cb27-23" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Resten av landet kodes som knr "9999"</span></span>
+<span id="cb27-24"><a href="#cb27-24" aria-hidden="true" tabindex="-1"></a>      <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"k9999"</span></span>
+<span id="cb27-25"><a href="#cb27-25" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb27-26"><a href="#cb27-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">nye_akom_navn =</span> <span class="fu">case_when</span>(</span>
+<span id="cb27-27"><a href="#cb27-27" aria-hidden="true" tabindex="-1"></a>      akom <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"k1102"</span>, <span class="st">"k1108"</span>, <span class="st">"k1129"</span>) <span class="sc">~</span> <span class="st">"Sandnes"</span>,</span>
+<span id="cb27-28"><a href="#cb27-28" aria-hidden="true" tabindex="-1"></a>      akom <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"k1103"</span>, <span class="st">"k1141"</span>, <span class="st">"k1142"</span>) <span class="sc">~</span> <span class="st">"Stavanger"</span>,</span>
+<span id="cb27-29"><a href="#cb27-29" aria-hidden="true" tabindex="-1"></a>      akom <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"k1154"</span>, <span class="st">"k1159"</span>, <span class="st">"k1160"</span>) <span class="sc">~</span> <span class="st">"Vindafjord"</span>,</span>
+<span id="cb27-30"><a href="#cb27-30" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Øvrige Bokna-regionen beholder sitt akom_navn</span></span>
+<span id="cb27-31"><a href="#cb27-31" aria-hidden="true" tabindex="-1"></a>      akom <span class="sc">%in%</span> knr_u_SSV <span class="sc">~</span> akom_navn,  </span>
+<span id="cb27-32"><a href="#cb27-32" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Resten av landet kodes som knr "RAL"</span></span>
+<span id="cb27-33"><a href="#cb27-33" aria-hidden="true" tabindex="-1"></a>      <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"RAL"</span></span>
+<span id="cb27-34"><a href="#cb27-34" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb27-35"><a href="#cb27-35" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Kopier til utklipstavle" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Deretter bruker vi group_by( ) og summerise( ) for å summere antall pendlere innenfor den nye kommuneinndelingen.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>pend_02_25_boBF_agg <span class="ot">&lt;-</span> pend_02_25_boBF <span class="sc">%&gt;%</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>    aar,</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>    nye_akom,</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>    nye_akom_navn,</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>    nye_bkom,</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>    nye_bkom_navn</span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">pendlere =</span> <span class="fu">sum</span>(pendlere, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Kopier til utklipstavle" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(pend_02_25_boBF_agg)</span></code></pre></div><button title="Kopier til utklipstavle" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 10080     6</code></pre>
+</div>
+</div>
+<p>For å sjekke at resulatene er riktige kjører vi chunken ovenfor. Her får vi resulatet: 10 080 rader og 6 kolonner. Det vil si at sammenslåingen fungerer for denne kombinasjonen.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(pend_02_25_boBF_agg, <span class="at">n  =</span> <span class="dv">24</span>)</span></code></pre></div><button title="Kopier til utklipstavle" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10,080 × 6
+   aar   nye_akom nye_akom_navn nye_bkom nye_bkom_navn pendlere
+   &lt;chr&gt; &lt;chr&gt;    &lt;chr&gt;         &lt;chr&gt;    &lt;chr&gt;            &lt;int&gt;
+ 1 2002  k1103    Stavanger     k1103    Stavanger        43142
+ 2 2002  k1103    Stavanger     k1106    Haugesund          347
+ 3 2002  k1103    Stavanger     k1108    Sandnes           8826
+ 4 2002  k1103    Stavanger     k1119    Hå                 637
+ 5 2002  k1103    Stavanger     k1120    Klepp             1187
+ 6 2002  k1103    Stavanger     k1121    Time              1049
+ 7 2002  k1103    Stavanger     k1122    Gjesdal            908
+ 8 2002  k1103    Stavanger     k1124    Sola              3774
+ 9 2002  k1103    Stavanger     k1127    Randaberg         2249
+10 2002  k1103    Stavanger     k1130    Strand             957
+11 2002  k1103    Stavanger     k1133    Hjelmeland         102
+12 2002  k1103    Stavanger     k1134    Suldal              97
+13 2002  k1103    Stavanger     k1135    Sauda               65
+14 2002  k1103    Stavanger     k1144    Kvitsøy             63
+15 2002  k1103    Stavanger     k1145    Bokn                16
+16 2002  k1103    Stavanger     k1146    Tysvær             109
+17 2002  k1103    Stavanger     k1149    Karmøy             416
+18 2002  k1103    Stavanger     k1160    Vindafjord          73
+19 2002  k1103    Stavanger     k4611    Etne                39
+20 2002  k1103    Stavanger     k4612    Sveio               41
+21 2002  k1106    Haugesund     k1103    Stavanger          120
+22 2002  k1106    Haugesund     k1106    Haugesund        10353
+23 2002  k1106    Haugesund     k1108    Sandnes             51
+24 2002  k1106    Haugesund     k1119    Hå                   7
+# ℹ 10,056 more rows</code></pre>
+</div>
+</div>
 </section>
 <section id="arbeidssted-bokna-regionen" class="level2" data-number="3.3">
 <h2 data-number="3.3" class="anchored" data-anchor-id="arbeidssted-bokna-regionen"><span class="header-section-number">3.3</span> Arbeidssted Bokna-regionen</h2>
+<p>Vi gjør tilsvarende for arbeidsstedsdatasettet (pend_02_25_arbBF). Her gjør vi samme aggregering som ovenfor.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>pend_02_25_arbBF <span class="ot">&lt;-</span> pend_02_25_arbBF <span class="sc">%&gt;%</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">nye_akom =</span> <span class="fu">case_when</span>(</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>      akom <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"k1102"</span>, <span class="st">"k1108"</span>, <span class="st">"k1129"</span>) <span class="sc">~</span> <span class="st">"k1108"</span>,</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>      akom <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"k1103"</span>, <span class="st">"k1141"</span>, <span class="st">"k1142"</span>) <span class="sc">~</span> <span class="st">"k1103"</span>,</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>      akom <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"k1154"</span>, <span class="st">"k1159"</span>, <span class="st">"k1160"</span>) <span class="sc">~</span> <span class="st">"k1160"</span>,</span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>      <span class="cn">TRUE</span> <span class="sc">~</span> akom</span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">nye_akom_navn =</span> <span class="fu">case_when</span>(</span>
+<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a>      akom <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"k1102"</span>, <span class="st">"k1108"</span>, <span class="st">"k1129"</span>) <span class="sc">~</span> <span class="st">"Sandnes"</span>,</span>
+<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a>      akom <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"k1103"</span>, <span class="st">"k1141"</span>, <span class="st">"k1142"</span>) <span class="sc">~</span> <span class="st">"Stavanger"</span>,</span>
+<span id="cb33-13"><a href="#cb33-13" aria-hidden="true" tabindex="-1"></a>      akom <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"k1154"</span>, <span class="st">"k1159"</span>, <span class="st">"k1160"</span>) <span class="sc">~</span> <span class="st">"Vindafjord"</span>,</span>
+<span id="cb33-14"><a href="#cb33-14" aria-hidden="true" tabindex="-1"></a>      <span class="cn">TRUE</span> <span class="sc">~</span> akom_navn</span>
+<span id="cb33-15"><a href="#cb33-15" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb33-16"><a href="#cb33-16" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb33-17"><a href="#cb33-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">nye_bkom =</span> <span class="fu">case_when</span>(</span>
+<span id="cb33-18"><a href="#cb33-18" aria-hidden="true" tabindex="-1"></a>      bkom <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"k1102"</span>, <span class="st">"k1108"</span>, <span class="st">"k1129"</span>) <span class="sc">~</span> <span class="st">"k1108"</span>,</span>
+<span id="cb33-19"><a href="#cb33-19" aria-hidden="true" tabindex="-1"></a>      bkom <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"k1103"</span>, <span class="st">"k1141"</span>, <span class="st">"k1142"</span>) <span class="sc">~</span> <span class="st">"k1103"</span>,</span>
+<span id="cb33-20"><a href="#cb33-20" aria-hidden="true" tabindex="-1"></a>      bkom <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"k1154"</span>, <span class="st">"k1159"</span>, <span class="st">"k1160"</span>) <span class="sc">~</span> <span class="st">"k1160"</span>,</span>
+<span id="cb33-21"><a href="#cb33-21" aria-hidden="true" tabindex="-1"></a>      bkom <span class="sc">%in%</span> knr_u_SSV <span class="sc">~</span> bkom,</span>
+<span id="cb33-22"><a href="#cb33-22" aria-hidden="true" tabindex="-1"></a>      <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"k9999"</span></span>
+<span id="cb33-23"><a href="#cb33-23" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb33-24"><a href="#cb33-24" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb33-25"><a href="#cb33-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">nye_bkom_navn =</span> <span class="fu">case_when</span>(</span>
+<span id="cb33-26"><a href="#cb33-26" aria-hidden="true" tabindex="-1"></a>      bkom <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"k1102"</span>, <span class="st">"k1108"</span>, <span class="st">"k1129"</span>) <span class="sc">~</span> <span class="st">"Sandnes"</span>,</span>
+<span id="cb33-27"><a href="#cb33-27" aria-hidden="true" tabindex="-1"></a>      bkom <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"k1103"</span>, <span class="st">"k1141"</span>, <span class="st">"k1142"</span>) <span class="sc">~</span> <span class="st">"Stavanger"</span>,</span>
+<span id="cb33-28"><a href="#cb33-28" aria-hidden="true" tabindex="-1"></a>      bkom <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"k1154"</span>, <span class="st">"k1159"</span>, <span class="st">"k1160"</span>) <span class="sc">~</span> <span class="st">"Vindafjord"</span>,</span>
+<span id="cb33-29"><a href="#cb33-29" aria-hidden="true" tabindex="-1"></a>      bkom <span class="sc">%in%</span> knr_u_SSV <span class="sc">~</span> bkom_navn,</span>
+<span id="cb33-30"><a href="#cb33-30" aria-hidden="true" tabindex="-1"></a>      <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"RAL"</span></span>
+<span id="cb33-31"><a href="#cb33-31" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb33-32"><a href="#cb33-32" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Kopier til utklipstavle" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Videre er vi nødt til å aggregere dataene. Selv om vi har endret kommunenummer, må vi fortsatt ha flere rader som gjelder samme kombinasjon av år, bosted og arbeidssted. Vi bruker da group_by( ) og summarise ( ) for å summere antall pendlere innenfor den nye kommuneinndelingen.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>pend_02_25_arbBF_agg <span class="ot">&lt;-</span> pend_02_25_arbBF <span class="sc">%&gt;%</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>    aar,</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>    nye_akom,</span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>    nye_akom_navn,</span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>    nye_bkom,</span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>    nye_bkom_navn</span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">pendlere =</span> <span class="fu">sum</span>(pendlere, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Kopier til utklipstavle" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Får å sjekke resulatene tar vi en test for Stavanger, som ser slik ut:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(pend_02_25_arbBF_agg, <span class="at">n =</span> <span class="dv">24</span>)</span></code></pre></div><button title="Kopier til utklipstavle" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10,080 × 6
+   aar   nye_akom nye_akom_navn nye_bkom nye_bkom_navn pendlere
+   &lt;chr&gt; &lt;chr&gt;    &lt;chr&gt;         &lt;chr&gt;    &lt;chr&gt;            &lt;int&gt;
+ 1 2002  k1103    Stavanger     k1103    Stavanger        43142
+ 2 2002  k1103    Stavanger     k1106    Haugesund          347
+ 3 2002  k1103    Stavanger     k1108    Sandnes           8826
+ 4 2002  k1103    Stavanger     k1119    Hå                 637
+ 5 2002  k1103    Stavanger     k1120    Klepp             1187
+ 6 2002  k1103    Stavanger     k1121    Time              1049
+ 7 2002  k1103    Stavanger     k1122    Gjesdal            908
+ 8 2002  k1103    Stavanger     k1124    Sola              3774
+ 9 2002  k1103    Stavanger     k1127    Randaberg         2249
+10 2002  k1103    Stavanger     k1130    Strand             957
+11 2002  k1103    Stavanger     k1133    Hjelmeland         102
+12 2002  k1103    Stavanger     k1134    Suldal              97
+13 2002  k1103    Stavanger     k1135    Sauda               65
+14 2002  k1103    Stavanger     k1144    Kvitsøy             63
+15 2002  k1103    Stavanger     k1145    Bokn                16
+16 2002  k1103    Stavanger     k1146    Tysvær             109
+17 2002  k1103    Stavanger     k1149    Karmøy             416
+18 2002  k1103    Stavanger     k1160    Vindafjord          93
+19 2002  k1103    Stavanger     k4611    Etne                39
+20 2002  k1103    Stavanger     k4612    Sveio               41
+21 2002  k1103    Stavanger     k9999    RAL               4638
+22 2002  k1106    Haugesund     k1103    Stavanger          120
+23 2002  k1106    Haugesund     k1106    Haugesund        10353
+24 2002  k1106    Haugesund     k1108    Sandnes             51
+# ℹ 10,056 more rows</code></pre>
+</div>
+</div>
+<p>Resulatene tyder på at sammenslåingen stemmer, vi kan derfor endre variabelnavn fra nye_akom til akom, og tilsvarende for de andre, i pend_02_25_arbBF_agg og pend_02_25_boBF_agg.</p>
+<p>Endrer variabelnavn pend_02_25_arbBF_agg:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>pend_02_25_arbBF_agg <span class="ot">&lt;-</span> pend_02_25_arbBF_agg <span class="sc">|&gt;</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">akom =</span> nye_akom,</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">akom_navn =</span> nye_akom_navn,</span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">bkom =</span> nye_bkom,</span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">bkom_navn =</span> nye_bkom_navn</span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Kopier til utklipstavle" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Gjør tilsvarnede for pend_02_25_boBF_agg:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>pend_02_25_boBF_agg <span class="ot">&lt;-</span> pend_02_25_boBF_agg <span class="sc">|&gt;</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">akom =</span> nye_akom,</span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">akom_navn =</span> nye_akom_navn,</span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">bkom =</span> nye_bkom,</span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">bkom_navn =</span> nye_bkom_navn</span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Kopier til utklipstavle" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Denne endringen gir oss følgende navn:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(pend_02_25_arbBF_agg)</span></code></pre></div><button title="Kopier til utklipstavle" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "aar"       "akom"      "akom_navn" "bkom"      "bkom_navn" "pendlere" </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(pend_02_25_boBF_agg)</span></code></pre></div><button title="Kopier til utklipstavle" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "aar"       "akom"      "akom_navn" "bkom"      "bkom_navn" "pendlere" </code></pre>
+</div>
+</div>
+<p>Videre slår vi sammen pend_02_25_arbBF_agg og pend_02_25_boBF til et felles datasett ved hjelp av en rbind( ). Det er fordi vi trenger ett felles datasett som inneholder alle relevante pendingsstrømmer.</p>
+<p>Først henter vi dem som bor i Bokna-regionen og arbeider i resten av landet:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>boBF_arb_RAL <span class="ot">&lt;-</span> pend_02_25_boBF_agg <span class="sc">%&gt;%</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(akom <span class="sc">==</span> <span class="st">"k9999"</span>)</span></code></pre></div><button title="Kopier til utklipstavle" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Deretter:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>pend_02_25 <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>  pend_02_25_arbBF_agg,</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>  boBF_arb_RAL</span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Kopier til utklipstavle" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Videre kontroller vi med følgende chunck, hvor forventet resulat er 10560 x 6:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(pend_02_25)</span></code></pre></div><button title="Kopier til utklipstavle" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 10560     6</code></pre>
+</div>
+</div>
+<p>For å gjøre litt rydding velger vi å kvitte oss med <code>arb_RAL</code>, <code>pend_02_25_arbBF</code>, <code>pend_02_25_boBF</code>, <code>pend_02_25_ssb_arbBF</code> og <code>pend_02_25_ssb_boBF</code>.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(boBF_arb_RAL, pend_02_25_arbBF, pend_02_25_boBF, </span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>   pend_02_25_ssb_arbBF, pend_02_25_ssb_boBF</span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Kopier til utklipstavle" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </section>
 </section>
 <section id="totalt-antall-arbeidstakere-i-hele-landet-per-år" class="level1" data-number="4">
 <h1 data-number="4"><span class="header-section-number">4</span> Totalt antall arbeidstakere i hele landet per år</h1>
+<p>Vi har nå informasjon om alle som bor eller arbeider i Bokna-regionen, men vi magler en gruppe. Hvor mange personer både bor og arbeider i resten av landet (RAL)? Denne informasjonen får vi ikke lastet ned fra tabell 03321. Vi er derfor nå nødt til å hente data fra tabell 11616 fordi den gir oss data på fylkes-basis. Vi er bare interessert i totalt antall arbeidstakere per år.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co"># oppdatert med "31", "32", "33", "39", "40", "55", "56"</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a><span class="co"># for splitting i 2024</span></span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>fnr <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"30"</span>, <span class="st">"01"</span>, <span class="st">"02"</span>, <span class="st">"06"</span>, <span class="st">"03"</span>, <span class="st">"34"</span>, <span class="st">"04"</span>, <span class="st">"05"</span>, <span class="st">"38"</span>,</span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">"07"</span>, <span class="st">"08"</span>, <span class="st">"42"</span>, <span class="st">"09"</span>, <span class="st">"10"</span>, <span class="st">"11"</span>, <span class="st">"46"</span>, <span class="st">"12"</span>, <span class="st">"14"</span>,</span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">"15"</span>, <span class="st">"50"</span>, <span class="st">"16"</span>, <span class="st">"17"</span>, <span class="st">"18"</span>, <span class="st">"54"</span>, <span class="st">"19"</span>, <span class="st">"20"</span>, <span class="st">"31"</span>, </span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">"32"</span>, <span class="st">"33"</span>, <span class="st">"39"</span>, <span class="st">"40"</span>, <span class="st">"55"</span>, <span class="st">"56"</span></span>
+<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Kopier til utklipstavle" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Videre henter vi data fra tabell 11616, på samme måte som tabell 03321:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ApiData</span>(</span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"https://data.ssb.no/api/v0/no/table/11616"</span>,</span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">returnApiQuery =</span> <span class="cn">TRUE</span></span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Kopier til utklipstavle" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>{
+  "query": [
+    {
+      "code": "Region",
+      "selection": {
+        "filter": "item",
+        "values": ["31", "2321", "9999"]
+      }
+    },
+    {
+      "code": "Kjonn",
+      "selection": {
+        "filter": "item",
+        "values": ["2", "1"]
+      }
+    },
+    {
+      "code": "Alder",
+      "selection": {
+        "filter": "item",
+        "values": ["15-74", "20-66"]
+      }
+    },
+    {
+      "code": "ContentsCode",
+      "selection": {
+        "filter": "item",
+        "values": ["Bosatt", "Utpendlere", "Arbeidssted"]
+      }
+    },
+    {
+      "code": "Tid",
+      "selection": {
+        "filter": "item",
+        "values": ["2000", "2024", "2025"]
+      }
+    }
+  ],
+  "response": {
+    "format": "json-stat2"
+  }
+} </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Henter data fra SSB</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>ssb_11616 <span class="ot">&lt;-</span> <span class="fu">ApiData12</span>(</span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">urlToData =</span> <span class="st">"11616"</span>,</span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">Region =</span> fnr, </span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">Kjonn =</span> <span class="fu">list</span>(<span class="st">"*"</span>),</span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">Alder =</span> <span class="st">"15-74"</span>, </span>
+<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">ContentsCode =</span> <span class="st">"Sysselsatte personer bosatt i regionen"</span>,</span>
+<span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">Tid =</span> <span class="fu">as.character</span>(<span class="dv">2002</span><span class="sc">:</span><span class="dv">2025</span>)</span>
+<span id="cb51-9"><a href="#cb51-9" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Kopier til utklipstavle" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Deretter bruker vi group_by( ) og summarise( ) for å summere antall sysselsatte per år.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>tot_arb_HL <span class="ot">&lt;-</span> ssb_11616 <span class="sc">%&gt;%</span></span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Tid) <span class="sc">%&gt;%</span></span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">arbtak_HL =</span> <span class="fu">sum</span>(value, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(</span>
+<span id="cb52-8"><a href="#cb52-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">aar =</span> Tid</span>
+<span id="cb52-9"><a href="#cb52-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb52-10"><a href="#cb52-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>()</span></code></pre></div><button title="Kopier til utklipstavle" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>For å kontrollere resulatet lager vi en tibble med to variabler, “Tid” (årstall) og “arbtak_HL”. Hvor toppen av tot_arb_HL skal se slik ut:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(tot_arb_HL, <span class="at">n =</span> <span class="dv">10</span>)</span></code></pre></div><button title="Kopier til utklipstavle" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 24 × 2
+   aar   arbtak_HL
+   &lt;chr&gt;     &lt;int&gt;
+ 1 2002    2267000
+ 2 2003    2260000
+ 3 2004    2274000
+ 4 2005    2308000
+ 5 2006    2389000
+ 6 2007    2484000
+ 7 2008    2525000
+ 8 2009    2497000
+ 9 2010    2517000
+10 2011    2562000
+# ℹ 14 more rows</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(tot_arb_HL)</span></code></pre></div><button title="Kopier til utklipstavle" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 24  2</code></pre>
+</div>
+</div>
+<p>Disse tallene skal senere brukes til å beregne hvor mange som både bor og arbeider i resten av landet (RAL).</p>
+<section id="bor-i-bokna-regionen-jobber-i-hl" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="bor-i-bokna-regionen-jobber-i-hl"><span class="header-section-number">4.1</span> Bor i Bokna-regionen, jobber i HL</h2>
+<p>Videre er vi nødt til å definere hele Bokna-regionen. Vektoren nedenfor inneholder kommunene i Bokna-regionen etter justering av kommuneinndelingen.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>BF <span class="ot">&lt;-</span> <span class="fu">c</span>(knr_u_SSV, <span class="st">"k1103"</span>, <span class="st">"k1108"</span>, <span class="st">"k1160"</span>)</span></code></pre></div><button title="Kopier til utklipstavle" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Deretter legger vi til antall som bor i Bokna-regionen og jobber i hele landet i bBFjHL. De som bor og jobber i bokna-regionen er med her.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="co"># bor i BF jobber hele landet inkl. BF</span></span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>bBFjHL <span class="ot">&lt;-</span> pend_02_25 <span class="sc">%&gt;%</span> </span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(bkom <span class="sc">%in%</span> BF) <span class="sc">%&gt;%</span> </span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(aar) <span class="sc">%&gt;%</span> </span>
+<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">bBFjHL =</span> <span class="fu">sum</span>(pendlere))</span></code></pre></div><button title="Kopier til utklipstavle" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="bor-i-ral-jobber-i-bokna-regionen" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="bor-i-ral-jobber-i-bokna-regionen"><span class="header-section-number">4.2</span> Bor i RAL jobber i Bokna-regionen</h2>
+<p>Vi gjør tilsvarende for dem som jobber i Bokna-regionen, men bor utenfor regionen.</p>
+<p>Vi koder hele landet som k0000.</p>
+</section>
+<section id="beregne-ral" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="beregne-ral"><span class="header-section-number">4.3</span> Beregne RAL</h2>
+<p>Nå setter vi sammen tot_arb_HL, bBFjHL (inkluderer bo BF og jobber BF) og bRALjBF (bor utenfor BF, jobber BF) til tot_arb_HL slik at vi kan regne ut antall som bor i RAL og jobber i RAL.</p>
+<p>Videre koder vi hele landet som k0000.</p>
+<p>For å finne antallet som både bor og jobber i RAL:</p>
+<p>Videre legger vi RAL (p_bRALjRAL) inn i datasettet (pend_02_25).</p>
+<p>For å kunne lage en fullstendig pendlematrise måtte vi også beregne antall personer som både bor og arbeider utenfor Bokna-regionen. Dette kunne ikke hentes direkte fra tabell 03321, og vi benyttet derfor toalt antall sysselsatte fra SSB-tabell 11616. Ved å trekke fra alle sysselsatte bosatt i Bokna-regionen og alle som bor utenfor regionen, men arbeider i den, fant vi antallet som både bor og arbeider i resten av landet.</p>
+<p>Til slutt sjekker vi at ting ser greit ut ved å lage en foreløpig pendle-matrise for 2010.</p>
+</section>
 </section>
 <section id="andel-pendlere" class="level1" data-number="5">
 <h1 data-number="5"><span class="header-section-number">5</span> Andel pendlere</h1>
@@ -679,81 +1294,536 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     }
   });
   </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Kildekode</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Arbeidskrav 3 – Pendling i Bokna-regionen"</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="an">subtitle:</span><span class="co"> "Databehandling og analyse av pendlingsmønstre 2002–2025"</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> "Gruppemedlemmer"</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> last-modified</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="an">date-format:</span><span class="co"> "dddd D MMM, YYYY"</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="an">lang:</span><span class="co"> nb</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="an">papersize:</span><span class="co"> a4</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co">    toc: true</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co">    toc-depth: 3</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co">    code-fold: false</span></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co">    code-tools: true</span></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co">    number-sections: true</span></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co">  typst:</span></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="co">    toc: true</span></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="co">    number-sections: true</span></span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="an">execute:</span></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="co">  warning: false</span></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="co">  message: false</span></span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="an">abstract:</span><span class="co"> (kort sammendrag)</span></span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a><span class="fu"># Pakkene vi har brukt</span></span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="fu"># Innledning</span></span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>Pendling er en viktig del av hvordan arbeidsmarkedet fungerer, og sier mye om hvor folk bor i forhold til der de jobber. I denne oppgaven undersøker vi pendling i kommunene rundt Boknafjorden fra 2002 til 2025. Innledningen bygger på bo- og arbeidsmarkedsregionene som NIBR/TØI publiserte i 2020. Området vi ser på består av seks slike regioner med til sammen 20 kommuner, og størrelsen varierer mye, fra Stavanger/Sandnes med ti kommuner til små regioner i Ryfylke med bare en. Alle kommuner utenfor området samler vi i en gruppe, "resten av landet" (RAL), slik at vi også får med pendlingen inn til og ut av regionen. </span>
-<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>Data hentes direkte fra SSB, tabell 03321 og 11616, ved hjelp av en API gjennom pakken PxWebApiData. Et problem underveis er at flere kommuner har blitt slått sammen eller har fått nytt kommunenummer, blant annet ved kommunereformen i 2020. Vi har derfor tilpasset dataene til kommunestrukturen slik den er i 2025, så tallene kan sammenlignes over hele prioden. </span>
-<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>Ut fra det lager vi et ryddig datasett med pendlingen mellom kommunene for alle årene. Datasettet bruker vi videre til å lage linjeplot over utviklingen, tabeller over hvor folk fra utvalgte kommuner jobber, og pendlematrisen for noen utvalgte år. </span>
-<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a><span class="fu">## Bruk av KI</span></span>
-<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a><span class="fu">## Kommuner i Bokna-regionen</span></span>
-<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a><span class="fu"># Hente data fra SSB</span></span>
-<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a><span class="fu">## Kommunesammenslåingene</span></span>
-<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a><span class="fu">## Bosted rundt Boknafjorden</span></span>
-<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a><span class="fu">## Arbeidssted Bokna-regionen</span></span>
-<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a><span class="fu"># Totalt antall arbeidstakere i hele landet per år</span></span>
-<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a><span class="fu"># Andel pendlere</span></span>
-<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a><span class="fu"># Bo- og arbeidsmarkedsregioner NIBR/TØI 2020</span></span>
-<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a><span class="fu">## Pendling internt i region 49</span></span>
-<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a><span class="fu"># Bor og jobber i samme kommune i Bokna-regionen</span></span>
-<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a><span class="fu">## Internpendling i et utvalg kommuner</span></span>
-<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a><span class="fu">## Hvor jobber folk bosatt i Stavanger kommune?</span></span>
-<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a><span class="fu">## Hvor jobber folk bosatt i Sandnes kommune?</span></span>
-<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a><span class="fu">## Hvor jobber folk bosatt i Sola kommune?</span></span>
-<span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a><span class="fu">## Hvor jobber folk bosatt i Klepp kommune?</span></span>
-<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-71"><a href="#cb1-71" aria-hidden="true" tabindex="-1"></a><span class="fu">## Hvor jobber folk bosatt i Haugesund kommune?</span></span>
-<span id="cb1-72"><a href="#cb1-72" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-73"><a href="#cb1-73" aria-hidden="true" tabindex="-1"></a><span class="fu">## Hvor jobber folk bosatt i Karmøy kommune?</span></span>
-<span id="cb1-74"><a href="#cb1-74" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-75"><a href="#cb1-75" aria-hidden="true" tabindex="-1"></a><span class="fu"># Pendlematriser</span></span></code></pre></div><button title="Kopier til utklipstavle" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb59" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Arbeidskrav 3 – Pendling i Bokna-regionen"</span></span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a><span class="an">subtitle:</span><span class="co"> "Databehandling og analyse av pendlingsmønstre 2002–2025"</span></span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> "Gruppemedlemmer"</span></span>
+<span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> last-modified</span></span>
+<span id="cb59-6"><a href="#cb59-6" aria-hidden="true" tabindex="-1"></a><span class="an">date-format:</span><span class="co"> "dddd D MMM, YYYY"</span></span>
+<span id="cb59-7"><a href="#cb59-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-8"><a href="#cb59-8" aria-hidden="true" tabindex="-1"></a><span class="an">lang:</span><span class="co"> nb</span></span>
+<span id="cb59-9"><a href="#cb59-9" aria-hidden="true" tabindex="-1"></a><span class="an">papersize:</span><span class="co"> a4</span></span>
+<span id="cb59-10"><a href="#cb59-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-11"><a href="#cb59-11" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
+<span id="cb59-12"><a href="#cb59-12" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
+<span id="cb59-13"><a href="#cb59-13" aria-hidden="true" tabindex="-1"></a><span class="co">    toc: true</span></span>
+<span id="cb59-14"><a href="#cb59-14" aria-hidden="true" tabindex="-1"></a><span class="co">    toc-depth: 3</span></span>
+<span id="cb59-15"><a href="#cb59-15" aria-hidden="true" tabindex="-1"></a><span class="co">    code-fold: false</span></span>
+<span id="cb59-16"><a href="#cb59-16" aria-hidden="true" tabindex="-1"></a><span class="co">    code-tools: true</span></span>
+<span id="cb59-17"><a href="#cb59-17" aria-hidden="true" tabindex="-1"></a><span class="co">    number-sections: true</span></span>
+<span id="cb59-18"><a href="#cb59-18" aria-hidden="true" tabindex="-1"></a><span class="co">  </span></span>
+<span id="cb59-19"><a href="#cb59-19" aria-hidden="true" tabindex="-1"></a><span class="co">  typst:</span></span>
+<span id="cb59-20"><a href="#cb59-20" aria-hidden="true" tabindex="-1"></a><span class="co">    toc: true</span></span>
+<span id="cb59-21"><a href="#cb59-21" aria-hidden="true" tabindex="-1"></a><span class="co">    number-sections: true</span></span>
+<span id="cb59-22"><a href="#cb59-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-23"><a href="#cb59-23" aria-hidden="true" tabindex="-1"></a><span class="an">execute:</span></span>
+<span id="cb59-24"><a href="#cb59-24" aria-hidden="true" tabindex="-1"></a><span class="co">  warning: false</span></span>
+<span id="cb59-25"><a href="#cb59-25" aria-hidden="true" tabindex="-1"></a><span class="co">  message: false</span></span>
+<span id="cb59-26"><a href="#cb59-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-27"><a href="#cb59-27" aria-hidden="true" tabindex="-1"></a><span class="an">abstract:</span><span class="co"> (kort sammendrag)</span></span>
+<span id="cb59-28"><a href="#cb59-28" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb59-29"><a href="#cb59-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-30"><a href="#cb59-30" aria-hidden="true" tabindex="-1"></a><span class="fu"># Pakkene vi har brukt</span></span>
+<span id="cb59-31"><a href="#cb59-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-34"><a href="#cb59-34" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb59-35"><a href="#cb59-35" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb59-36"><a href="#cb59-36" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(PxWebApiData)</span>
+<span id="cb59-37"><a href="#cb59-37" aria-hidden="true" tabindex="-1"></a><span class="co">#library(flextable)</span></span>
+<span id="cb59-38"><a href="#cb59-38" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb59-39"><a href="#cb59-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-40"><a href="#cb59-40" aria-hidden="true" tabindex="-1"></a><span class="fu"># Innledning</span></span>
+<span id="cb59-41"><a href="#cb59-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-42"><a href="#cb59-42" aria-hidden="true" tabindex="-1"></a>Pendling er en viktig del av hvordan arbeidsmarkedet fungerer, og sier mye om hvor folk bor i forhold til der de jobber. I denne oppgaven undersøker vi pendling i kommunene rundt Boknafjorden fra 2002 til 2025. Innledningen bygger på bo- og arbeidsmarkedsregionene som NIBR/TØI publiserte i 2020. Området vi ser på består av seks slike regioner med til sammen 20 kommuner, og størrelsen varierer mye, fra Stavanger/Sandnes med ti kommuner til små regioner i Ryfylke med bare en. Alle kommuner utenfor området samler vi i en gruppe, "resten av landet" (RAL), slik at vi også får med pendlingen inn til og ut av regionen.</span>
+<span id="cb59-43"><a href="#cb59-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-44"><a href="#cb59-44" aria-hidden="true" tabindex="-1"></a>Data hentes direkte fra SSB, tabell 03321 og 11616, ved hjelp av en API gjennom pakken PxWebApiData. Et problem underveis er at flere kommuner har blitt slått sammen eller har fått nytt kommunenummer, blant annet ved kommunereformen i 2020. Vi har derfor tilpasset dataene til kommunestrukturen slik den er i 2025, så tallene kan sammenlignes over hele prioden.</span>
+<span id="cb59-45"><a href="#cb59-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-46"><a href="#cb59-46" aria-hidden="true" tabindex="-1"></a>Ut fra det lager vi et ryddig datasett med pendlingen mellom kommunene for alle årene. Datasettet bruker vi videre til å lage linjeplot over utviklingen, tabeller over hvor folk fra utvalgte kommuner jobber, og pendlematrisen for noen utvalgte år.</span>
+<span id="cb59-47"><a href="#cb59-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-48"><a href="#cb59-48" aria-hidden="true" tabindex="-1"></a><span class="fu">## Bruk av KI</span></span>
+<span id="cb59-49"><a href="#cb59-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-50"><a href="#cb59-50" aria-hidden="true" tabindex="-1"></a><span class="fu">## Kommuner i Bokna-regionen</span></span>
+<span id="cb59-51"><a href="#cb59-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-52"><a href="#cb59-52" aria-hidden="true" tabindex="-1"></a>Vi starter med å definere kommunene som inngår i Bokna-regionen. Datasettet omfatter både tidligere og nåværende kommunenummer, ettersom det har vært flere kommunesammenslåinger og endringer i kommuneinndelingen i perioden 2002-2025. Ved å inkludere de tidligere kommunene kan vi senere aggregere dataene til en felles kommunestruktur, som vil gjøre utviklingen over tid mer sammenlignbar.</span>
+<span id="cb59-53"><a href="#cb59-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-54"><a href="#cb59-54" aria-hidden="true" tabindex="-1"></a>Nedenfor vises kommunenumre for Bokna-regionen, som inkluderer både gamle og nye kommunenumre.</span>
+<span id="cb59-55"><a href="#cb59-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-58"><a href="#cb59-58" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb59-59"><a href="#cb59-59" aria-hidden="true" tabindex="-1"></a><span class="co"># Kommunenumre for Bokna-regionen</span></span>
+<span id="cb59-60"><a href="#cb59-60" aria-hidden="true" tabindex="-1"></a><span class="co"># Inkluderer både gamle og nye kommunenumre</span></span>
+<span id="cb59-61"><a href="#cb59-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-62"><a href="#cb59-62" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(knr)</span>
+<span id="cb59-63"><a href="#cb59-63" aria-hidden="true" tabindex="-1"></a>knr <span class="ot">&lt;-</span> <span class="fu">as.character</span>(<span class="fu">c</span>(<span class="dv">1102</span>, <span class="dv">1103</span>, <span class="dv">1108</span>, <span class="dv">1124</span>, <span class="dv">1127</span>, <span class="dv">1120</span>, <span class="dv">1122</span>, <span class="dv">1121</span>, <span class="dv">1119</span>,</span>
+<span id="cb59-64"><a href="#cb59-64" aria-hidden="true" tabindex="-1"></a>                      <span class="dv">1144</span>, <span class="dv">1130</span>, <span class="dv">1106</span>, <span class="dv">1146</span>, <span class="dv">1149</span>, <span class="dv">1216</span>, <span class="dv">4612</span>, <span class="dv">1145</span>, <span class="dv">1133</span>,</span>
+<span id="cb59-65"><a href="#cb59-65" aria-hidden="true" tabindex="-1"></a>                      <span class="dv">1134</span>, <span class="dv">1135</span>, <span class="dv">1154</span>, <span class="dv">1160</span>, <span class="dv">1211</span>, <span class="dv">4611</span>, <span class="dv">1129</span>, <span class="dv">1141</span>, <span class="dv">1142</span>))</span>
+<span id="cb59-66"><a href="#cb59-66" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(knr); <span class="fu">length</span>(knr)</span>
+<span id="cb59-67"><a href="#cb59-67" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb59-68"><a href="#cb59-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-71"><a href="#cb59-71" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb59-72"><a href="#cb59-72" aria-hidden="true" tabindex="-1"></a>knavn <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Sandnes (-2019)"</span>, <span class="st">"Stavanger"</span>, <span class="st">"Nye-Sandnes"</span>, </span>
+<span id="cb59-73"><a href="#cb59-73" aria-hidden="true" tabindex="-1"></a>           <span class="st">"Sola"</span>, <span class="st">"Randaberg"</span>, <span class="st">"Klepp"</span>, <span class="st">"Gjesdal"</span>, <span class="st">"Time"</span>, </span>
+<span id="cb59-74"><a href="#cb59-74" aria-hidden="true" tabindex="-1"></a>           <span class="st">"Hå"</span>, <span class="st">"Kvitsøy"</span>, <span class="st">"Strand"</span>, <span class="st">"Haugesund"</span>, <span class="st">"Tysvær"</span>, </span>
+<span id="cb59-75"><a href="#cb59-75" aria-hidden="true" tabindex="-1"></a>           <span class="st">"Karmøy"</span>, <span class="st">"Sveio (-2019)"</span>, <span class="st">"Sveio"</span>, <span class="st">"Bokn"</span>, </span>
+<span id="cb59-76"><a href="#cb59-76" aria-hidden="true" tabindex="-1"></a>           <span class="st">"Hjelmeland"</span>, <span class="st">"Suldal"</span>, <span class="st">"Sauda"</span>, <span class="st">"Vindafjord (-2006)"</span>, </span>
+<span id="cb59-77"><a href="#cb59-77" aria-hidden="true" tabindex="-1"></a>           <span class="st">"Vindafjord"</span>, <span class="st">"Etne (-2019)"</span>, <span class="st">"Etne"</span>, </span>
+<span id="cb59-78"><a href="#cb59-78" aria-hidden="true" tabindex="-1"></a>           <span class="st">"Forsand (-2019)"</span>, <span class="st">"Finnøy (-2020)"</span>,</span>
+<span id="cb59-79"><a href="#cb59-79" aria-hidden="true" tabindex="-1"></a>           <span class="st">"Rennesøy (-2020)"</span></span>
+<span id="cb59-80"><a href="#cb59-80" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb59-81"><a href="#cb59-81" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb59-82"><a href="#cb59-82" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-83"><a href="#cb59-83" aria-hidden="true" tabindex="-1"></a><span class="fu"># Hente data fra SSB</span></span>
+<span id="cb59-84"><a href="#cb59-84" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-87"><a href="#cb59-87" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb59-88"><a href="#cb59-88" aria-hidden="true" tabindex="-1"></a><span class="co">#Get more info about table</span></span>
+<span id="cb59-89"><a href="#cb59-89" aria-hidden="true" tabindex="-1"></a><span class="fu">ApiData</span>(</span>
+<span id="cb59-90"><a href="#cb59-90" aria-hidden="true" tabindex="-1"></a>  <span class="st">"http://data.ssb.no/api/v0/en/table/03321"</span>,</span>
+<span id="cb59-91"><a href="#cb59-91" aria-hidden="true" tabindex="-1"></a>  <span class="at">returnApiQuery =</span> <span class="cn">TRUE</span></span>
+<span id="cb59-92"><a href="#cb59-92" aria-hidden="true" tabindex="-1"></a>) </span>
+<span id="cb59-93"><a href="#cb59-93" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb59-94"><a href="#cb59-94" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-97"><a href="#cb59-97" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb59-98"><a href="#cb59-98" aria-hidden="true" tabindex="-1"></a>pend_02_25_ssb_boBF <span class="ot">&lt;-</span> <span class="fu">ApiData12</span>(</span>
+<span id="cb59-99"><a href="#cb59-99" aria-hidden="true" tabindex="-1"></a>  <span class="at">urlToData =</span> <span class="st">"03321"</span>,</span>
+<span id="cb59-100"><a href="#cb59-100" aria-hidden="true" tabindex="-1"></a>  <span class="at">ArbstedKomm =</span> <span class="fu">list</span>(<span class="st">'*'</span>),</span>
+<span id="cb59-101"><a href="#cb59-101" aria-hidden="true" tabindex="-1"></a>  <span class="at">Bokommuen =</span> knr, <span class="co"># Merk skrivemåten</span></span>
+<span id="cb59-102"><a href="#cb59-102" aria-hidden="true" tabindex="-1"></a>  <span class="at">Tid =</span> <span class="fu">as.character</span>(<span class="dv">2002</span><span class="sc">:</span><span class="dv">2025</span>)</span>
+<span id="cb59-103"><a href="#cb59-103" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb59-104"><a href="#cb59-104" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb59-105"><a href="#cb59-105" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-108"><a href="#cb59-108" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb59-109"><a href="#cb59-109" aria-hidden="true" tabindex="-1"></a><span class="fu">View</span>(pend_02_25_ssb_boBF)</span>
+<span id="cb59-110"><a href="#cb59-110" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-111"><a href="#cb59-111" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(pend_02_25_ssb_boBF)</span>
+<span id="cb59-112"><a href="#cb59-112" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-113"><a href="#cb59-113" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(pend_02_25_ssb_boBF)</span>
+<span id="cb59-114"><a href="#cb59-114" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-115"><a href="#cb59-115" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(pend_02_25_ssb_boBF)</span>
+<span id="cb59-116"><a href="#cb59-116" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb59-117"><a href="#cb59-117" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-118"><a href="#cb59-118" aria-hidden="true" tabindex="-1"></a>Pednledataene ble hentet fra Statistisk sentralbyrås tabell 03321 ved hjelp av funksjonen ApiData12 ( ) fra pakken PxWebApiData. Vi hentet data for perioden 2002-2025, med bosted begrenset til kommunene i Bokna-regionen og arbeidssted fordelt på alle kommuner i landet. Dette gir oss informasjon om hvor personer bosatt i Bokna-regionen arbeider, både innenfor og utenfor regionen.</span>
+<span id="cb59-119"><a href="#cb59-119" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-122"><a href="#cb59-122" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb59-123"><a href="#cb59-123" aria-hidden="true" tabindex="-1"></a><span class="co">#| cache: true</span></span>
+<span id="cb59-124"><a href="#cb59-124" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-125"><a href="#cb59-125" aria-hidden="true" tabindex="-1"></a>pend_02_25_ssb_arbBF <span class="ot">&lt;-</span> <span class="fu">ApiData12</span>(</span>
+<span id="cb59-126"><a href="#cb59-126" aria-hidden="true" tabindex="-1"></a>  <span class="at">urlToData =</span> <span class="st">"03321"</span>,</span>
+<span id="cb59-127"><a href="#cb59-127" aria-hidden="true" tabindex="-1"></a>  <span class="at">ArbstedKomm =</span> knr,</span>
+<span id="cb59-128"><a href="#cb59-128" aria-hidden="true" tabindex="-1"></a>  <span class="at">Bokommuen =</span> <span class="fu">list</span>(<span class="st">'*'</span>),</span>
+<span id="cb59-129"><a href="#cb59-129" aria-hidden="true" tabindex="-1"></a>  <span class="at">Tid =</span> <span class="fu">as.character</span>(<span class="dv">2002</span><span class="sc">:</span><span class="dv">2025</span>)</span>
+<span id="cb59-130"><a href="#cb59-130" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb59-131"><a href="#cb59-131" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb59-132"><a href="#cb59-132" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-135"><a href="#cb59-135" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb59-136"><a href="#cb59-136" aria-hidden="true" tabindex="-1"></a><span class="fu">View</span>(pend_02_25_ssb_arbBF)</span>
+<span id="cb59-137"><a href="#cb59-137" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-138"><a href="#cb59-138" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(pend_02_25_ssb_arbBF)</span>
+<span id="cb59-139"><a href="#cb59-139" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-140"><a href="#cb59-140" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(pend_02_25_ssb_arbBF)</span>
+<span id="cb59-141"><a href="#cb59-141" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb59-142"><a href="#cb59-142" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-143"><a href="#cb59-143" aria-hidden="true" tabindex="-1"></a>Vi hentet deretter et tilsvarende datasett for personer som arbeider i Bokna-regionen. Her ble arbeidssted begrenset til kommunene i regionen, mens bosted omfatter alle kommuner i landet. Ved å kombinere disse to datasattene får vi informasjon om både innpendling til og utpendling fra Bokna-regionen.</span>
+<span id="cb59-144"><a href="#cb59-144" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-147"><a href="#cb59-147" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb59-148"><a href="#cb59-148" aria-hidden="true" tabindex="-1"></a>pend_02_25_boBF <span class="ot">&lt;-</span> pend_02_25_ssb_boBF <span class="sc">%&gt;%</span></span>
+<span id="cb59-149"><a href="#cb59-149" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb59-150"><a href="#cb59-150" aria-hidden="true" tabindex="-1"></a>    <span class="at">akom_navn =</span> arbeidsstedskommune,</span>
+<span id="cb59-151"><a href="#cb59-151" aria-hidden="true" tabindex="-1"></a>    <span class="at">bkom_navn =</span> bostedskommune,</span>
+<span id="cb59-152"><a href="#cb59-152" aria-hidden="true" tabindex="-1"></a>    <span class="at">akom =</span> <span class="fu">paste</span>(<span class="st">"k"</span>, ArbstedKomm, <span class="at">sep =</span> <span class="st">""</span>),</span>
+<span id="cb59-153"><a href="#cb59-153" aria-hidden="true" tabindex="-1"></a>    <span class="at">bkom =</span> <span class="fu">paste</span>(<span class="st">"k"</span>, Bokommuen, <span class="at">sep =</span> <span class="st">""</span>),</span>
+<span id="cb59-154"><a href="#cb59-154" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb59-155"><a href="#cb59-155" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Skifter navn og nummer for Etne og Sveio</span></span>
+<span id="cb59-156"><a href="#cb59-156" aria-hidden="true" tabindex="-1"></a>    <span class="at">akom =</span> <span class="fu">ifelse</span>(akom <span class="sc">==</span> <span class="st">"k1211"</span>, <span class="st">"k4611"</span>, akom),</span>
+<span id="cb59-157"><a href="#cb59-157" aria-hidden="true" tabindex="-1"></a>    <span class="at">akom =</span> <span class="fu">ifelse</span>(akom <span class="sc">==</span> <span class="st">"k1216"</span>, <span class="st">"k4612"</span>, akom),</span>
+<span id="cb59-158"><a href="#cb59-158" aria-hidden="true" tabindex="-1"></a>    <span class="at">bkom =</span> <span class="fu">ifelse</span>(bkom <span class="sc">==</span> <span class="st">"k1211"</span>, <span class="st">"k4611"</span>, bkom),</span>
+<span id="cb59-159"><a href="#cb59-159" aria-hidden="true" tabindex="-1"></a>    <span class="at">bkom =</span> <span class="fu">ifelse</span>(bkom <span class="sc">==</span> <span class="st">"k1216"</span>, <span class="st">"k4612"</span>, bkom),</span>
+<span id="cb59-160"><a href="#cb59-160" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb59-161"><a href="#cb59-161" aria-hidden="true" tabindex="-1"></a>    <span class="at">akom_navn =</span> <span class="fu">ifelse</span>(akom_navn <span class="sc">==</span> <span class="st">"Etne (-2019)"</span>, <span class="st">"Etne"</span>, akom_navn),</span>
+<span id="cb59-162"><a href="#cb59-162" aria-hidden="true" tabindex="-1"></a>    <span class="at">akom_navn =</span> <span class="fu">ifelse</span>(akom_navn <span class="sc">==</span> <span class="st">"Sveio (-2019)"</span>, <span class="st">"Sveio"</span>, akom_navn),</span>
+<span id="cb59-163"><a href="#cb59-163" aria-hidden="true" tabindex="-1"></a>    <span class="at">bkom_navn =</span> <span class="fu">ifelse</span>(bkom_navn <span class="sc">==</span> <span class="st">"Etne (-2019)"</span>, <span class="st">"Etne"</span>, bkom_navn),</span>
+<span id="cb59-164"><a href="#cb59-164" aria-hidden="true" tabindex="-1"></a>    <span class="at">bkom_navn =</span> <span class="fu">ifelse</span>(bkom_navn <span class="sc">==</span> <span class="st">"Sveio (-2019)"</span>, <span class="st">"Sveio"</span>, bkom_navn)</span>
+<span id="cb59-165"><a href="#cb59-165" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb59-166"><a href="#cb59-166" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(</span>
+<span id="cb59-167"><a href="#cb59-167" aria-hidden="true" tabindex="-1"></a>    <span class="at">aar =</span> Tid,</span>
+<span id="cb59-168"><a href="#cb59-168" aria-hidden="true" tabindex="-1"></a>    <span class="at">pendlere =</span> value</span>
+<span id="cb59-169"><a href="#cb59-169" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb59-170"><a href="#cb59-170" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(aar, akom, akom_navn, bkom, bkom_navn, pendlere) <span class="sc">%&gt;%</span></span>
+<span id="cb59-171"><a href="#cb59-171" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>()</span>
+<span id="cb59-172"><a href="#cb59-172" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb59-173"><a href="#cb59-173" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-176"><a href="#cb59-176" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb59-177"><a href="#cb59-177" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(pend_02_25_boBF, <span class="at">n =</span> <span class="dv">5</span>)</span>
+<span id="cb59-178"><a href="#cb59-178" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb59-179"><a href="#cb59-179" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-182"><a href="#cb59-182" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb59-183"><a href="#cb59-183" aria-hidden="true" tabindex="-1"></a>pend_02_25_arbBF <span class="ot">&lt;-</span> pend_02_25_ssb_arbBF <span class="sc">%&gt;%</span></span>
+<span id="cb59-184"><a href="#cb59-184" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb59-185"><a href="#cb59-185" aria-hidden="true" tabindex="-1"></a>    <span class="at">akom_navn =</span> arbeidsstedskommune,</span>
+<span id="cb59-186"><a href="#cb59-186" aria-hidden="true" tabindex="-1"></a>    <span class="at">bkom_navn =</span> bostedskommune,</span>
+<span id="cb59-187"><a href="#cb59-187" aria-hidden="true" tabindex="-1"></a>    <span class="at">akom =</span> <span class="fu">paste</span>(<span class="st">"k"</span>, ArbstedKomm, <span class="at">sep =</span> <span class="st">""</span>),</span>
+<span id="cb59-188"><a href="#cb59-188" aria-hidden="true" tabindex="-1"></a>    <span class="at">bkom =</span> <span class="fu">paste</span>(<span class="st">"k"</span>, Bokommuen, <span class="at">sep =</span> <span class="st">""</span>),</span>
+<span id="cb59-189"><a href="#cb59-189" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb59-190"><a href="#cb59-190" aria-hidden="true" tabindex="-1"></a>    <span class="at">akom =</span> <span class="fu">ifelse</span>(akom <span class="sc">==</span> <span class="st">"k1211"</span>, <span class="st">"k4611"</span>, akom),</span>
+<span id="cb59-191"><a href="#cb59-191" aria-hidden="true" tabindex="-1"></a>    <span class="at">akom =</span> <span class="fu">ifelse</span>(akom <span class="sc">==</span> <span class="st">"k1216"</span>, <span class="st">"k4612"</span>, akom),</span>
+<span id="cb59-192"><a href="#cb59-192" aria-hidden="true" tabindex="-1"></a>    <span class="at">bkom =</span> <span class="fu">ifelse</span>(bkom <span class="sc">==</span> <span class="st">"k1211"</span>, <span class="st">"k4611"</span>, bkom),</span>
+<span id="cb59-193"><a href="#cb59-193" aria-hidden="true" tabindex="-1"></a>    <span class="at">bkom =</span> <span class="fu">ifelse</span>(bkom <span class="sc">==</span> <span class="st">"k1216"</span>, <span class="st">"k4612"</span>, bkom),</span>
+<span id="cb59-194"><a href="#cb59-194" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb59-195"><a href="#cb59-195" aria-hidden="true" tabindex="-1"></a>    <span class="at">akom_navn =</span> <span class="fu">ifelse</span>(akom_navn <span class="sc">==</span> <span class="st">"Etne (-2019)"</span>, <span class="st">"Etne"</span>, akom_navn),</span>
+<span id="cb59-196"><a href="#cb59-196" aria-hidden="true" tabindex="-1"></a>    <span class="at">akom_navn =</span> <span class="fu">ifelse</span>(akom_navn <span class="sc">==</span> <span class="st">"Sveio (-2019)"</span>, <span class="st">"Sveio"</span>, akom_navn),</span>
+<span id="cb59-197"><a href="#cb59-197" aria-hidden="true" tabindex="-1"></a>    <span class="at">bkom_navn =</span> <span class="fu">ifelse</span>(bkom_navn <span class="sc">==</span> <span class="st">"Etne (-2019)"</span>, <span class="st">"Etne"</span>, bkom_navn),</span>
+<span id="cb59-198"><a href="#cb59-198" aria-hidden="true" tabindex="-1"></a>    <span class="at">bkom_navn =</span> <span class="fu">ifelse</span>(bkom_navn <span class="sc">==</span> <span class="st">"Sveio (-2019)"</span>, <span class="st">"Sveio"</span>, bkom_navn)</span>
+<span id="cb59-199"><a href="#cb59-199" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb59-200"><a href="#cb59-200" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(</span>
+<span id="cb59-201"><a href="#cb59-201" aria-hidden="true" tabindex="-1"></a>    <span class="at">aar =</span> Tid,</span>
+<span id="cb59-202"><a href="#cb59-202" aria-hidden="true" tabindex="-1"></a>    <span class="at">pendlere =</span> value</span>
+<span id="cb59-203"><a href="#cb59-203" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb59-204"><a href="#cb59-204" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(aar, akom, akom_navn, bkom, bkom_navn, pendlere) <span class="sc">%&gt;%</span></span>
+<span id="cb59-205"><a href="#cb59-205" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>()</span>
+<span id="cb59-206"><a href="#cb59-206" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb59-207"><a href="#cb59-207" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-210"><a href="#cb59-210" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb59-211"><a href="#cb59-211" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(pend_02_25_arbBF, <span class="at">n =</span> <span class="dv">5</span>)</span>
+<span id="cb59-212"><a href="#cb59-212" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb59-213"><a href="#cb59-213" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-214"><a href="#cb59-214" aria-hidden="true" tabindex="-1"></a>Etter at dataene var hentet fra SSB, utarbeidet vi datasettene slik at de fikk samme struktur. Vi endret kolonnenavn, beholdt de relevante variablene og tilpasset kommunenavn for Etne og Sveio. Dette var nødvendig fordi begge kommunene fikk nye kommunenummer i 2020. På denne måten kan pedledata fra ulike år sammenlignes innenfor en felles kommuneinndeling. Dette har vi gjort både for datasettet pend_02_25_ssb_arbBF og pend_02_25_ssb_boBF.</span>
+<span id="cb59-215"><a href="#cb59-215" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-216"><a href="#cb59-216" aria-hidden="true" tabindex="-1"></a><span class="fu">## Kommunesammenslåingene</span></span>
+<span id="cb59-217"><a href="#cb59-217" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-218"><a href="#cb59-218" aria-hidden="true" tabindex="-1"></a>Videre er det nødvendig å opprette en felles kommunestruktur for hele perioden 2002-2025. Det vil si at kommuner som tidligere var selvstendige, må slås sammen i datasettet. Vi er har derfor laget en liste over kommunene som ikke skal slås sammen.</span>
+<span id="cb59-219"><a href="#cb59-219" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-222"><a href="#cb59-222" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb59-223"><a href="#cb59-223" aria-hidden="true" tabindex="-1"></a>knr_u_SSV <span class="ot">&lt;-</span> <span class="fu">paste</span>(</span>
+<span id="cb59-224"><a href="#cb59-224" aria-hidden="true" tabindex="-1"></a>  <span class="st">"k"</span>,</span>
+<span id="cb59-225"><a href="#cb59-225" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(</span>
+<span id="cb59-226"><a href="#cb59-226" aria-hidden="true" tabindex="-1"></a>    <span class="dv">1124</span>, <span class="dv">1127</span>, <span class="dv">1120</span>, <span class="dv">1122</span>, <span class="dv">1121</span>, <span class="dv">1119</span>,</span>
+<span id="cb59-227"><a href="#cb59-227" aria-hidden="true" tabindex="-1"></a>    <span class="dv">1144</span>, <span class="dv">1130</span>, <span class="dv">1106</span>, <span class="dv">1146</span>, <span class="dv">1149</span>, <span class="dv">1145</span>,</span>
+<span id="cb59-228"><a href="#cb59-228" aria-hidden="true" tabindex="-1"></a>    <span class="dv">1133</span>, <span class="dv">1134</span>, <span class="dv">1135</span>, <span class="dv">1102</span>, <span class="dv">4611</span>, <span class="dv">4612</span></span>
+<span id="cb59-229"><a href="#cb59-229" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb59-230"><a href="#cb59-230" aria-hidden="true" tabindex="-1"></a>  <span class="at">sep =</span> <span class="st">""</span></span>
+<span id="cb59-231"><a href="#cb59-231" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb59-232"><a href="#cb59-232" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb59-233"><a href="#cb59-233" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-234"><a href="#cb59-234" aria-hidden="true" tabindex="-1"></a><span class="fu">## Bosted rundt Boknafjorden</span></span>
+<span id="cb59-235"><a href="#cb59-235" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-236"><a href="#cb59-236" aria-hidden="true" tabindex="-1"></a>Deretter legger vi til nye kommunenummer. Dette innebærer blant annet sammenslåing av tidligere Sandes og Forsand, Stavanger med Finnøy og Rennesøy, samt Vindafjord og Ølen. Vi tar utgangspunkt i pend_02_25 og lager nye_bkom, nye_bkom_navn, nye_akom og nye_akom_navn der verdiene avhenger av hvilket nummer/navn kommunene hadde i utgangspunktet. Kommuner utenfor Bokna-regionen ble samlet i kategorien RAL, som står for Resten Av Landet.</span>
+<span id="cb59-237"><a href="#cb59-237" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-240"><a href="#cb59-240" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb59-241"><a href="#cb59-241" aria-hidden="true" tabindex="-1"></a>pend_02_25_boBF <span class="ot">&lt;-</span> pend_02_25_boBF <span class="sc">%&gt;%</span> </span>
+<span id="cb59-242"><a href="#cb59-242" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb59-243"><a href="#cb59-243" aria-hidden="true" tabindex="-1"></a>    <span class="at">nye_bkom =</span> <span class="fu">case_when</span>(</span>
+<span id="cb59-244"><a href="#cb59-244" aria-hidden="true" tabindex="-1"></a>      bkom <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"k1102"</span>, <span class="st">"k1108"</span>, <span class="st">"k1129"</span>) <span class="sc">~</span> <span class="st">"k1108"</span>,</span>
+<span id="cb59-245"><a href="#cb59-245" aria-hidden="true" tabindex="-1"></a>      bkom <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"k1103"</span>, <span class="st">"k1141"</span>, <span class="st">"k1142"</span>) <span class="sc">~</span> <span class="st">"k1103"</span>,</span>
+<span id="cb59-246"><a href="#cb59-246" aria-hidden="true" tabindex="-1"></a>      bkom <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"k1154"</span>, <span class="st">"k1159"</span>, <span class="st">"k1160"</span>) <span class="sc">~</span> <span class="st">"k1160"</span>,</span>
+<span id="cb59-247"><a href="#cb59-247" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Øvrige  Bokna-region beholder sin bkom</span></span>
+<span id="cb59-248"><a href="#cb59-248" aria-hidden="true" tabindex="-1"></a>      <span class="cn">TRUE</span> <span class="sc">~</span> bkom</span>
+<span id="cb59-249"><a href="#cb59-249" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb59-250"><a href="#cb59-250" aria-hidden="true" tabindex="-1"></a>    <span class="at">nye_bkom_navn =</span> <span class="fu">case_when</span>(</span>
+<span id="cb59-251"><a href="#cb59-251" aria-hidden="true" tabindex="-1"></a>      bkom <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"k1102"</span>, <span class="st">"k1108"</span>, <span class="st">"k1129"</span>) <span class="sc">~</span> <span class="st">"Sandnes"</span>,</span>
+<span id="cb59-252"><a href="#cb59-252" aria-hidden="true" tabindex="-1"></a>      bkom <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"k1103"</span>, <span class="st">"k1141"</span>, <span class="st">"k1142"</span>) <span class="sc">~</span> <span class="st">"Stavanger"</span>,</span>
+<span id="cb59-253"><a href="#cb59-253" aria-hidden="true" tabindex="-1"></a>      bkom <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"k1154"</span>, <span class="st">"k1159"</span>, <span class="st">"k1160"</span>) <span class="sc">~</span> <span class="st">"Vindafjord"</span>,</span>
+<span id="cb59-254"><a href="#cb59-254" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Øvrige  Bokna-region beholder sitt bkom_navn</span></span>
+<span id="cb59-255"><a href="#cb59-255" aria-hidden="true" tabindex="-1"></a>      <span class="cn">TRUE</span> <span class="sc">~</span> bkom_navn</span>
+<span id="cb59-256"><a href="#cb59-256" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb59-257"><a href="#cb59-257" aria-hidden="true" tabindex="-1"></a>    <span class="at">nye_akom =</span> <span class="fu">case_when</span>(</span>
+<span id="cb59-258"><a href="#cb59-258" aria-hidden="true" tabindex="-1"></a>      akom <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"k1102"</span>, <span class="st">"k1108"</span>, <span class="st">"k1129"</span>) <span class="sc">~</span> <span class="st">"k1108"</span>,</span>
+<span id="cb59-259"><a href="#cb59-259" aria-hidden="true" tabindex="-1"></a>      akom <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"k1103"</span>, <span class="st">"k1141"</span>, <span class="st">"k1142"</span>) <span class="sc">~</span> <span class="st">"k1103"</span>,</span>
+<span id="cb59-260"><a href="#cb59-260" aria-hidden="true" tabindex="-1"></a>      akom <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"k1154"</span>, <span class="st">"k1159"</span>, <span class="st">"k1160"</span>) <span class="sc">~</span> <span class="st">"k1160"</span>,</span>
+<span id="cb59-261"><a href="#cb59-261" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Øvrige  Bokna-regionen beholder sin akom</span></span>
+<span id="cb59-262"><a href="#cb59-262" aria-hidden="true" tabindex="-1"></a>      akom <span class="sc">%in%</span> knr_u_SSV <span class="sc">~</span> akom,   </span>
+<span id="cb59-263"><a href="#cb59-263" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Resten av landet kodes som knr "9999"</span></span>
+<span id="cb59-264"><a href="#cb59-264" aria-hidden="true" tabindex="-1"></a>      <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"k9999"</span></span>
+<span id="cb59-265"><a href="#cb59-265" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb59-266"><a href="#cb59-266" aria-hidden="true" tabindex="-1"></a>    <span class="at">nye_akom_navn =</span> <span class="fu">case_when</span>(</span>
+<span id="cb59-267"><a href="#cb59-267" aria-hidden="true" tabindex="-1"></a>      akom <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"k1102"</span>, <span class="st">"k1108"</span>, <span class="st">"k1129"</span>) <span class="sc">~</span> <span class="st">"Sandnes"</span>,</span>
+<span id="cb59-268"><a href="#cb59-268" aria-hidden="true" tabindex="-1"></a>      akom <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"k1103"</span>, <span class="st">"k1141"</span>, <span class="st">"k1142"</span>) <span class="sc">~</span> <span class="st">"Stavanger"</span>,</span>
+<span id="cb59-269"><a href="#cb59-269" aria-hidden="true" tabindex="-1"></a>      akom <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"k1154"</span>, <span class="st">"k1159"</span>, <span class="st">"k1160"</span>) <span class="sc">~</span> <span class="st">"Vindafjord"</span>,</span>
+<span id="cb59-270"><a href="#cb59-270" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Øvrige Bokna-regionen beholder sitt akom_navn</span></span>
+<span id="cb59-271"><a href="#cb59-271" aria-hidden="true" tabindex="-1"></a>      akom <span class="sc">%in%</span> knr_u_SSV <span class="sc">~</span> akom_navn,  </span>
+<span id="cb59-272"><a href="#cb59-272" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Resten av landet kodes som knr "RAL"</span></span>
+<span id="cb59-273"><a href="#cb59-273" aria-hidden="true" tabindex="-1"></a>      <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"RAL"</span></span>
+<span id="cb59-274"><a href="#cb59-274" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb59-275"><a href="#cb59-275" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb59-276"><a href="#cb59-276" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb59-277"><a href="#cb59-277" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-278"><a href="#cb59-278" aria-hidden="true" tabindex="-1"></a>Deretter bruker vi group_by( ) og summerise( ) for å summere antall pendlere innenfor den nye kommuneinndelingen.</span>
+<span id="cb59-279"><a href="#cb59-279" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-282"><a href="#cb59-282" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb59-283"><a href="#cb59-283" aria-hidden="true" tabindex="-1"></a>pend_02_25_boBF_agg <span class="ot">&lt;-</span> pend_02_25_boBF <span class="sc">%&gt;%</span></span>
+<span id="cb59-284"><a href="#cb59-284" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(</span>
+<span id="cb59-285"><a href="#cb59-285" aria-hidden="true" tabindex="-1"></a>    aar,</span>
+<span id="cb59-286"><a href="#cb59-286" aria-hidden="true" tabindex="-1"></a>    nye_akom,</span>
+<span id="cb59-287"><a href="#cb59-287" aria-hidden="true" tabindex="-1"></a>    nye_akom_navn,</span>
+<span id="cb59-288"><a href="#cb59-288" aria-hidden="true" tabindex="-1"></a>    nye_bkom,</span>
+<span id="cb59-289"><a href="#cb59-289" aria-hidden="true" tabindex="-1"></a>    nye_bkom_navn</span>
+<span id="cb59-290"><a href="#cb59-290" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb59-291"><a href="#cb59-291" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb59-292"><a href="#cb59-292" aria-hidden="true" tabindex="-1"></a>    <span class="at">pendlere =</span> <span class="fu">sum</span>(pendlere, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb59-293"><a href="#cb59-293" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb59-294"><a href="#cb59-294" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb59-295"><a href="#cb59-295" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb59-296"><a href="#cb59-296" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-299"><a href="#cb59-299" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb59-300"><a href="#cb59-300" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(pend_02_25_boBF_agg)</span>
+<span id="cb59-301"><a href="#cb59-301" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb59-302"><a href="#cb59-302" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-303"><a href="#cb59-303" aria-hidden="true" tabindex="-1"></a>For å sjekke at resulatene er riktige kjører vi chunken ovenfor. Her får vi resulatet: 10 080 rader og 6 kolonner. Det vil si at sammenslåingen fungerer for denne kombinasjonen.</span>
+<span id="cb59-304"><a href="#cb59-304" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-307"><a href="#cb59-307" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb59-308"><a href="#cb59-308" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(pend_02_25_boBF_agg, <span class="at">n  =</span> <span class="dv">24</span>)</span>
+<span id="cb59-309"><a href="#cb59-309" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb59-310"><a href="#cb59-310" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-311"><a href="#cb59-311" aria-hidden="true" tabindex="-1"></a><span class="fu">## Arbeidssted Bokna-regionen</span></span>
+<span id="cb59-312"><a href="#cb59-312" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-313"><a href="#cb59-313" aria-hidden="true" tabindex="-1"></a>Vi gjør tilsvarende for arbeidsstedsdatasettet (pend_02_25_arbBF). Her gjør vi samme aggregering som ovenfor.</span>
+<span id="cb59-314"><a href="#cb59-314" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-317"><a href="#cb59-317" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb59-318"><a href="#cb59-318" aria-hidden="true" tabindex="-1"></a>pend_02_25_arbBF <span class="ot">&lt;-</span> pend_02_25_arbBF <span class="sc">%&gt;%</span></span>
+<span id="cb59-319"><a href="#cb59-319" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb59-320"><a href="#cb59-320" aria-hidden="true" tabindex="-1"></a>    <span class="at">nye_akom =</span> <span class="fu">case_when</span>(</span>
+<span id="cb59-321"><a href="#cb59-321" aria-hidden="true" tabindex="-1"></a>      akom <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"k1102"</span>, <span class="st">"k1108"</span>, <span class="st">"k1129"</span>) <span class="sc">~</span> <span class="st">"k1108"</span>,</span>
+<span id="cb59-322"><a href="#cb59-322" aria-hidden="true" tabindex="-1"></a>      akom <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"k1103"</span>, <span class="st">"k1141"</span>, <span class="st">"k1142"</span>) <span class="sc">~</span> <span class="st">"k1103"</span>,</span>
+<span id="cb59-323"><a href="#cb59-323" aria-hidden="true" tabindex="-1"></a>      akom <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"k1154"</span>, <span class="st">"k1159"</span>, <span class="st">"k1160"</span>) <span class="sc">~</span> <span class="st">"k1160"</span>,</span>
+<span id="cb59-324"><a href="#cb59-324" aria-hidden="true" tabindex="-1"></a>      <span class="cn">TRUE</span> <span class="sc">~</span> akom</span>
+<span id="cb59-325"><a href="#cb59-325" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb59-326"><a href="#cb59-326" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb59-327"><a href="#cb59-327" aria-hidden="true" tabindex="-1"></a>    <span class="at">nye_akom_navn =</span> <span class="fu">case_when</span>(</span>
+<span id="cb59-328"><a href="#cb59-328" aria-hidden="true" tabindex="-1"></a>      akom <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"k1102"</span>, <span class="st">"k1108"</span>, <span class="st">"k1129"</span>) <span class="sc">~</span> <span class="st">"Sandnes"</span>,</span>
+<span id="cb59-329"><a href="#cb59-329" aria-hidden="true" tabindex="-1"></a>      akom <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"k1103"</span>, <span class="st">"k1141"</span>, <span class="st">"k1142"</span>) <span class="sc">~</span> <span class="st">"Stavanger"</span>,</span>
+<span id="cb59-330"><a href="#cb59-330" aria-hidden="true" tabindex="-1"></a>      akom <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"k1154"</span>, <span class="st">"k1159"</span>, <span class="st">"k1160"</span>) <span class="sc">~</span> <span class="st">"Vindafjord"</span>,</span>
+<span id="cb59-331"><a href="#cb59-331" aria-hidden="true" tabindex="-1"></a>      <span class="cn">TRUE</span> <span class="sc">~</span> akom_navn</span>
+<span id="cb59-332"><a href="#cb59-332" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb59-333"><a href="#cb59-333" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb59-334"><a href="#cb59-334" aria-hidden="true" tabindex="-1"></a>    <span class="at">nye_bkom =</span> <span class="fu">case_when</span>(</span>
+<span id="cb59-335"><a href="#cb59-335" aria-hidden="true" tabindex="-1"></a>      bkom <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"k1102"</span>, <span class="st">"k1108"</span>, <span class="st">"k1129"</span>) <span class="sc">~</span> <span class="st">"k1108"</span>,</span>
+<span id="cb59-336"><a href="#cb59-336" aria-hidden="true" tabindex="-1"></a>      bkom <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"k1103"</span>, <span class="st">"k1141"</span>, <span class="st">"k1142"</span>) <span class="sc">~</span> <span class="st">"k1103"</span>,</span>
+<span id="cb59-337"><a href="#cb59-337" aria-hidden="true" tabindex="-1"></a>      bkom <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"k1154"</span>, <span class="st">"k1159"</span>, <span class="st">"k1160"</span>) <span class="sc">~</span> <span class="st">"k1160"</span>,</span>
+<span id="cb59-338"><a href="#cb59-338" aria-hidden="true" tabindex="-1"></a>      bkom <span class="sc">%in%</span> knr_u_SSV <span class="sc">~</span> bkom,</span>
+<span id="cb59-339"><a href="#cb59-339" aria-hidden="true" tabindex="-1"></a>      <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"k9999"</span></span>
+<span id="cb59-340"><a href="#cb59-340" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb59-341"><a href="#cb59-341" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb59-342"><a href="#cb59-342" aria-hidden="true" tabindex="-1"></a>    <span class="at">nye_bkom_navn =</span> <span class="fu">case_when</span>(</span>
+<span id="cb59-343"><a href="#cb59-343" aria-hidden="true" tabindex="-1"></a>      bkom <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"k1102"</span>, <span class="st">"k1108"</span>, <span class="st">"k1129"</span>) <span class="sc">~</span> <span class="st">"Sandnes"</span>,</span>
+<span id="cb59-344"><a href="#cb59-344" aria-hidden="true" tabindex="-1"></a>      bkom <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"k1103"</span>, <span class="st">"k1141"</span>, <span class="st">"k1142"</span>) <span class="sc">~</span> <span class="st">"Stavanger"</span>,</span>
+<span id="cb59-345"><a href="#cb59-345" aria-hidden="true" tabindex="-1"></a>      bkom <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"k1154"</span>, <span class="st">"k1159"</span>, <span class="st">"k1160"</span>) <span class="sc">~</span> <span class="st">"Vindafjord"</span>,</span>
+<span id="cb59-346"><a href="#cb59-346" aria-hidden="true" tabindex="-1"></a>      bkom <span class="sc">%in%</span> knr_u_SSV <span class="sc">~</span> bkom_navn,</span>
+<span id="cb59-347"><a href="#cb59-347" aria-hidden="true" tabindex="-1"></a>      <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"RAL"</span></span>
+<span id="cb59-348"><a href="#cb59-348" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb59-349"><a href="#cb59-349" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb59-350"><a href="#cb59-350" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb59-351"><a href="#cb59-351" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-352"><a href="#cb59-352" aria-hidden="true" tabindex="-1"></a>Videre er vi nødt til å aggregere dataene. Selv om vi har endret kommunenummer, må vi fortsatt ha flere rader som gjelder samme kombinasjon av år, bosted og arbeidssted. Vi bruker da group_by( ) og summarise ( ) for å summere antall pendlere innenfor den nye kommuneinndelingen.</span>
+<span id="cb59-353"><a href="#cb59-353" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-356"><a href="#cb59-356" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb59-357"><a href="#cb59-357" aria-hidden="true" tabindex="-1"></a>pend_02_25_arbBF_agg <span class="ot">&lt;-</span> pend_02_25_arbBF <span class="sc">%&gt;%</span></span>
+<span id="cb59-358"><a href="#cb59-358" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(</span>
+<span id="cb59-359"><a href="#cb59-359" aria-hidden="true" tabindex="-1"></a>    aar,</span>
+<span id="cb59-360"><a href="#cb59-360" aria-hidden="true" tabindex="-1"></a>    nye_akom,</span>
+<span id="cb59-361"><a href="#cb59-361" aria-hidden="true" tabindex="-1"></a>    nye_akom_navn,</span>
+<span id="cb59-362"><a href="#cb59-362" aria-hidden="true" tabindex="-1"></a>    nye_bkom,</span>
+<span id="cb59-363"><a href="#cb59-363" aria-hidden="true" tabindex="-1"></a>    nye_bkom_navn</span>
+<span id="cb59-364"><a href="#cb59-364" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb59-365"><a href="#cb59-365" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb59-366"><a href="#cb59-366" aria-hidden="true" tabindex="-1"></a>    <span class="at">pendlere =</span> <span class="fu">sum</span>(pendlere, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb59-367"><a href="#cb59-367" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb59-368"><a href="#cb59-368" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb59-369"><a href="#cb59-369" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb59-370"><a href="#cb59-370" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-371"><a href="#cb59-371" aria-hidden="true" tabindex="-1"></a>Får å sjekke resulatene tar vi en test for Stavanger, som ser slik ut:</span>
+<span id="cb59-372"><a href="#cb59-372" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-375"><a href="#cb59-375" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb59-376"><a href="#cb59-376" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(pend_02_25_arbBF_agg, <span class="at">n =</span> <span class="dv">24</span>)</span>
+<span id="cb59-377"><a href="#cb59-377" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb59-378"><a href="#cb59-378" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-379"><a href="#cb59-379" aria-hidden="true" tabindex="-1"></a>Resulatene tyder på at sammenslåingen stemmer, vi kan derfor endre variabelnavn fra nye_akom til akom, og tilsvarende for de andre, i pend_02_25_arbBF_agg og pend_02_25_boBF_agg.</span>
+<span id="cb59-380"><a href="#cb59-380" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-381"><a href="#cb59-381" aria-hidden="true" tabindex="-1"></a>Endrer variabelnavn pend_02_25_arbBF_agg:</span>
+<span id="cb59-382"><a href="#cb59-382" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-385"><a href="#cb59-385" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb59-386"><a href="#cb59-386" aria-hidden="true" tabindex="-1"></a>pend_02_25_arbBF_agg <span class="ot">&lt;-</span> pend_02_25_arbBF_agg <span class="sc">|&gt;</span></span>
+<span id="cb59-387"><a href="#cb59-387" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(</span>
+<span id="cb59-388"><a href="#cb59-388" aria-hidden="true" tabindex="-1"></a>    <span class="at">akom =</span> nye_akom,</span>
+<span id="cb59-389"><a href="#cb59-389" aria-hidden="true" tabindex="-1"></a>    <span class="at">akom_navn =</span> nye_akom_navn,</span>
+<span id="cb59-390"><a href="#cb59-390" aria-hidden="true" tabindex="-1"></a>    <span class="at">bkom =</span> nye_bkom,</span>
+<span id="cb59-391"><a href="#cb59-391" aria-hidden="true" tabindex="-1"></a>    <span class="at">bkom_navn =</span> nye_bkom_navn</span>
+<span id="cb59-392"><a href="#cb59-392" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb59-393"><a href="#cb59-393" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb59-394"><a href="#cb59-394" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-395"><a href="#cb59-395" aria-hidden="true" tabindex="-1"></a>Gjør tilsvarnede for pend_02_25_boBF_agg:</span>
+<span id="cb59-396"><a href="#cb59-396" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-399"><a href="#cb59-399" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb59-400"><a href="#cb59-400" aria-hidden="true" tabindex="-1"></a>pend_02_25_boBF_agg <span class="ot">&lt;-</span> pend_02_25_boBF_agg <span class="sc">|&gt;</span></span>
+<span id="cb59-401"><a href="#cb59-401" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(</span>
+<span id="cb59-402"><a href="#cb59-402" aria-hidden="true" tabindex="-1"></a>    <span class="at">akom =</span> nye_akom,</span>
+<span id="cb59-403"><a href="#cb59-403" aria-hidden="true" tabindex="-1"></a>    <span class="at">akom_navn =</span> nye_akom_navn,</span>
+<span id="cb59-404"><a href="#cb59-404" aria-hidden="true" tabindex="-1"></a>    <span class="at">bkom =</span> nye_bkom,</span>
+<span id="cb59-405"><a href="#cb59-405" aria-hidden="true" tabindex="-1"></a>    <span class="at">bkom_navn =</span> nye_bkom_navn</span>
+<span id="cb59-406"><a href="#cb59-406" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb59-407"><a href="#cb59-407" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb59-408"><a href="#cb59-408" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-409"><a href="#cb59-409" aria-hidden="true" tabindex="-1"></a>Denne endringen gir oss følgende navn:</span>
+<span id="cb59-410"><a href="#cb59-410" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-413"><a href="#cb59-413" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb59-414"><a href="#cb59-414" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(pend_02_25_arbBF_agg)</span>
+<span id="cb59-415"><a href="#cb59-415" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-416"><a href="#cb59-416" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb59-417"><a href="#cb59-417" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-420"><a href="#cb59-420" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb59-421"><a href="#cb59-421" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(pend_02_25_boBF_agg)</span>
+<span id="cb59-422"><a href="#cb59-422" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb59-423"><a href="#cb59-423" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-424"><a href="#cb59-424" aria-hidden="true" tabindex="-1"></a>Videre slår vi sammen pend_02_25_arbBF_agg og pend_02_25_boBF til et felles datasett ved hjelp av en rbind( ). Det er fordi vi trenger ett felles datasett som inneholder alle relevante pendingsstrømmer.</span>
+<span id="cb59-425"><a href="#cb59-425" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-426"><a href="#cb59-426" aria-hidden="true" tabindex="-1"></a>Først henter vi dem som bor i Bokna-regionen og arbeider i resten av landet:</span>
+<span id="cb59-427"><a href="#cb59-427" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-430"><a href="#cb59-430" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb59-431"><a href="#cb59-431" aria-hidden="true" tabindex="-1"></a>boBF_arb_RAL <span class="ot">&lt;-</span> pend_02_25_boBF_agg <span class="sc">%&gt;%</span></span>
+<span id="cb59-432"><a href="#cb59-432" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(akom <span class="sc">==</span> <span class="st">"k9999"</span>)</span>
+<span id="cb59-433"><a href="#cb59-433" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb59-434"><a href="#cb59-434" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-435"><a href="#cb59-435" aria-hidden="true" tabindex="-1"></a>Deretter:</span>
+<span id="cb59-436"><a href="#cb59-436" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-439"><a href="#cb59-439" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb59-440"><a href="#cb59-440" aria-hidden="true" tabindex="-1"></a>pend_02_25 <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(</span>
+<span id="cb59-441"><a href="#cb59-441" aria-hidden="true" tabindex="-1"></a>  pend_02_25_arbBF_agg,</span>
+<span id="cb59-442"><a href="#cb59-442" aria-hidden="true" tabindex="-1"></a>  boBF_arb_RAL</span>
+<span id="cb59-443"><a href="#cb59-443" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb59-444"><a href="#cb59-444" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb59-445"><a href="#cb59-445" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-446"><a href="#cb59-446" aria-hidden="true" tabindex="-1"></a>Videre kontroller vi med følgende chunck, hvor forventet resulat er 10560 x 6:</span>
+<span id="cb59-447"><a href="#cb59-447" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-450"><a href="#cb59-450" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb59-451"><a href="#cb59-451" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(pend_02_25)</span>
+<span id="cb59-452"><a href="#cb59-452" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb59-453"><a href="#cb59-453" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-454"><a href="#cb59-454" aria-hidden="true" tabindex="-1"></a>For å gjøre litt rydding velger vi å kvitte oss med <span class="in">`arb_RAL`</span>, <span class="in">`pend_02_25_arbBF`</span>, <span class="in">`pend_02_25_boBF`</span>, <span class="in">`pend_02_25_ssb_arbBF`</span> og <span class="in">`pend_02_25_ssb_boBF`</span>.</span>
+<span id="cb59-455"><a href="#cb59-455" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-458"><a href="#cb59-458" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb59-459"><a href="#cb59-459" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(boBF_arb_RAL, pend_02_25_arbBF, pend_02_25_boBF, </span>
+<span id="cb59-460"><a href="#cb59-460" aria-hidden="true" tabindex="-1"></a>   pend_02_25_ssb_arbBF, pend_02_25_ssb_boBF</span>
+<span id="cb59-461"><a href="#cb59-461" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb59-462"><a href="#cb59-462" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb59-463"><a href="#cb59-463" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-464"><a href="#cb59-464" aria-hidden="true" tabindex="-1"></a><span class="fu"># Totalt antall arbeidstakere i hele landet per år</span></span>
+<span id="cb59-465"><a href="#cb59-465" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-466"><a href="#cb59-466" aria-hidden="true" tabindex="-1"></a>Vi har nå informasjon om alle som bor eller arbeider i Bokna-regionen, men vi magler en gruppe. Hvor mange personer både bor og arbeider i resten av landet (RAL)? Denne informasjonen får vi ikke lastet ned fra tabell 03321. Vi er derfor nå nødt til å hente data fra tabell 11616 fordi den gir oss data på fylkes-basis. Vi er bare interessert i totalt antall arbeidstakere per år.</span>
+<span id="cb59-467"><a href="#cb59-467" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-470"><a href="#cb59-470" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb59-471"><a href="#cb59-471" aria-hidden="true" tabindex="-1"></a><span class="co"># oppdatert med "31", "32", "33", "39", "40", "55", "56"</span></span>
+<span id="cb59-472"><a href="#cb59-472" aria-hidden="true" tabindex="-1"></a><span class="co"># for splitting i 2024</span></span>
+<span id="cb59-473"><a href="#cb59-473" aria-hidden="true" tabindex="-1"></a>fnr <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb59-474"><a href="#cb59-474" aria-hidden="true" tabindex="-1"></a>  <span class="st">"30"</span>, <span class="st">"01"</span>, <span class="st">"02"</span>, <span class="st">"06"</span>, <span class="st">"03"</span>, <span class="st">"34"</span>, <span class="st">"04"</span>, <span class="st">"05"</span>, <span class="st">"38"</span>,</span>
+<span id="cb59-475"><a href="#cb59-475" aria-hidden="true" tabindex="-1"></a>  <span class="st">"07"</span>, <span class="st">"08"</span>, <span class="st">"42"</span>, <span class="st">"09"</span>, <span class="st">"10"</span>, <span class="st">"11"</span>, <span class="st">"46"</span>, <span class="st">"12"</span>, <span class="st">"14"</span>,</span>
+<span id="cb59-476"><a href="#cb59-476" aria-hidden="true" tabindex="-1"></a>  <span class="st">"15"</span>, <span class="st">"50"</span>, <span class="st">"16"</span>, <span class="st">"17"</span>, <span class="st">"18"</span>, <span class="st">"54"</span>, <span class="st">"19"</span>, <span class="st">"20"</span>, <span class="st">"31"</span>, </span>
+<span id="cb59-477"><a href="#cb59-477" aria-hidden="true" tabindex="-1"></a>  <span class="st">"32"</span>, <span class="st">"33"</span>, <span class="st">"39"</span>, <span class="st">"40"</span>, <span class="st">"55"</span>, <span class="st">"56"</span></span>
+<span id="cb59-478"><a href="#cb59-478" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb59-479"><a href="#cb59-479" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb59-480"><a href="#cb59-480" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-481"><a href="#cb59-481" aria-hidden="true" tabindex="-1"></a>Videre henter vi data fra tabell 11616, på samme måte som tabell 03321:</span>
+<span id="cb59-482"><a href="#cb59-482" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-485"><a href="#cb59-485" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb59-486"><a href="#cb59-486" aria-hidden="true" tabindex="-1"></a><span class="fu">ApiData</span>(</span>
+<span id="cb59-487"><a href="#cb59-487" aria-hidden="true" tabindex="-1"></a>  <span class="st">"https://data.ssb.no/api/v0/no/table/11616"</span>,</span>
+<span id="cb59-488"><a href="#cb59-488" aria-hidden="true" tabindex="-1"></a>  <span class="at">returnApiQuery =</span> <span class="cn">TRUE</span></span>
+<span id="cb59-489"><a href="#cb59-489" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb59-490"><a href="#cb59-490" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb59-491"><a href="#cb59-491" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-494"><a href="#cb59-494" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb59-495"><a href="#cb59-495" aria-hidden="true" tabindex="-1"></a><span class="co"># Henter data fra SSB</span></span>
+<span id="cb59-496"><a href="#cb59-496" aria-hidden="true" tabindex="-1"></a>ssb_11616 <span class="ot">&lt;-</span> <span class="fu">ApiData12</span>(</span>
+<span id="cb59-497"><a href="#cb59-497" aria-hidden="true" tabindex="-1"></a>  <span class="at">urlToData =</span> <span class="st">"11616"</span>,</span>
+<span id="cb59-498"><a href="#cb59-498" aria-hidden="true" tabindex="-1"></a>  <span class="at">Region =</span> fnr, </span>
+<span id="cb59-499"><a href="#cb59-499" aria-hidden="true" tabindex="-1"></a>  <span class="at">Kjonn =</span> <span class="fu">list</span>(<span class="st">"*"</span>),</span>
+<span id="cb59-500"><a href="#cb59-500" aria-hidden="true" tabindex="-1"></a>  <span class="at">Alder =</span> <span class="st">"15-74"</span>, </span>
+<span id="cb59-501"><a href="#cb59-501" aria-hidden="true" tabindex="-1"></a>  <span class="at">ContentsCode =</span> <span class="st">"Sysselsatte personer bosatt i regionen"</span>,</span>
+<span id="cb59-502"><a href="#cb59-502" aria-hidden="true" tabindex="-1"></a>  <span class="at">Tid =</span> <span class="fu">as.character</span>(<span class="dv">2002</span><span class="sc">:</span><span class="dv">2025</span>)</span>
+<span id="cb59-503"><a href="#cb59-503" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb59-504"><a href="#cb59-504" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb59-505"><a href="#cb59-505" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-506"><a href="#cb59-506" aria-hidden="true" tabindex="-1"></a>Deretter bruker vi group_by( ) og summarise( ) for å summere antall sysselsatte per år.</span>
+<span id="cb59-507"><a href="#cb59-507" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-510"><a href="#cb59-510" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb59-511"><a href="#cb59-511" aria-hidden="true" tabindex="-1"></a>tot_arb_HL <span class="ot">&lt;-</span> ssb_11616 <span class="sc">%&gt;%</span></span>
+<span id="cb59-512"><a href="#cb59-512" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Tid) <span class="sc">%&gt;%</span></span>
+<span id="cb59-513"><a href="#cb59-513" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb59-514"><a href="#cb59-514" aria-hidden="true" tabindex="-1"></a>    <span class="at">arbtak_HL =</span> <span class="fu">sum</span>(value, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb59-515"><a href="#cb59-515" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb59-516"><a href="#cb59-516" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb59-517"><a href="#cb59-517" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(</span>
+<span id="cb59-518"><a href="#cb59-518" aria-hidden="true" tabindex="-1"></a>    <span class="at">aar =</span> Tid</span>
+<span id="cb59-519"><a href="#cb59-519" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb59-520"><a href="#cb59-520" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>()</span>
+<span id="cb59-521"><a href="#cb59-521" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb59-522"><a href="#cb59-522" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-523"><a href="#cb59-523" aria-hidden="true" tabindex="-1"></a>For å kontrollere resulatet lager vi en tibble med to variabler, "Tid" (årstall) og "arbtak_HL". Hvor toppen av tot_arb_HL skal se slik ut:</span>
+<span id="cb59-524"><a href="#cb59-524" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-527"><a href="#cb59-527" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb59-528"><a href="#cb59-528" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(tot_arb_HL, <span class="at">n =</span> <span class="dv">10</span>)</span>
+<span id="cb59-529"><a href="#cb59-529" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-530"><a href="#cb59-530" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(tot_arb_HL)</span>
+<span id="cb59-531"><a href="#cb59-531" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb59-532"><a href="#cb59-532" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-533"><a href="#cb59-533" aria-hidden="true" tabindex="-1"></a>Disse tallene skal senere brukes til å beregne hvor mange som både bor og arbeider i resten av landet (RAL).</span>
+<span id="cb59-534"><a href="#cb59-534" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-535"><a href="#cb59-535" aria-hidden="true" tabindex="-1"></a><span class="fu">## Bor i Bokna-regionen, jobber i HL</span></span>
+<span id="cb59-536"><a href="#cb59-536" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-537"><a href="#cb59-537" aria-hidden="true" tabindex="-1"></a>Videre er vi nødt til å definere hele Bokna-regionen. Vektoren nedenfor inneholder kommunene i Bokna-regionen etter justering av kommuneinndelingen.</span>
+<span id="cb59-538"><a href="#cb59-538" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-541"><a href="#cb59-541" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb59-542"><a href="#cb59-542" aria-hidden="true" tabindex="-1"></a>BF <span class="ot">&lt;-</span> <span class="fu">c</span>(knr_u_SSV, <span class="st">"k1103"</span>, <span class="st">"k1108"</span>, <span class="st">"k1160"</span>)</span>
+<span id="cb59-543"><a href="#cb59-543" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb59-544"><a href="#cb59-544" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-545"><a href="#cb59-545" aria-hidden="true" tabindex="-1"></a>Deretter legger vi til antall som bor i Bokna-regionen og jobber i hele landet i bBFjHL. De som bor og jobber i bokna-regionen er med her.</span>
+<span id="cb59-546"><a href="#cb59-546" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-549"><a href="#cb59-549" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb59-550"><a href="#cb59-550" aria-hidden="true" tabindex="-1"></a><span class="co"># bor i BF jobber hele landet inkl. BF</span></span>
+<span id="cb59-551"><a href="#cb59-551" aria-hidden="true" tabindex="-1"></a>bBFjHL <span class="ot">&lt;-</span> pend_02_25 <span class="sc">%&gt;%</span> </span>
+<span id="cb59-552"><a href="#cb59-552" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(bkom <span class="sc">%in%</span> BF) <span class="sc">%&gt;%</span> </span>
+<span id="cb59-553"><a href="#cb59-553" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(aar) <span class="sc">%&gt;%</span> </span>
+<span id="cb59-554"><a href="#cb59-554" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">bBFjHL =</span> <span class="fu">sum</span>(pendlere))</span>
+<span id="cb59-555"><a href="#cb59-555" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb59-556"><a href="#cb59-556" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-557"><a href="#cb59-557" aria-hidden="true" tabindex="-1"></a><span class="fu">## Bor i RAL jobber i Bokna-regionen</span></span>
+<span id="cb59-558"><a href="#cb59-558" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-559"><a href="#cb59-559" aria-hidden="true" tabindex="-1"></a>Vi gjør tilsvarende for dem som jobber i Bokna-regionen, men bor utenfor regionen.</span>
+<span id="cb59-560"><a href="#cb59-560" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-561"><a href="#cb59-561" aria-hidden="true" tabindex="-1"></a>Vi koder hele landet som k0000.</span>
+<span id="cb59-562"><a href="#cb59-562" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-563"><a href="#cb59-563" aria-hidden="true" tabindex="-1"></a><span class="fu">## Beregne RAL</span></span>
+<span id="cb59-564"><a href="#cb59-564" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-565"><a href="#cb59-565" aria-hidden="true" tabindex="-1"></a>Nå setter vi sammen tot_arb_HL, bBFjHL (inkluderer bo BF og jobber BF) og bRALjBF (bor utenfor BF, jobber BF) til tot_arb_HL slik at vi kan regne ut antall som bor i RAL og jobber i RAL.</span>
+<span id="cb59-566"><a href="#cb59-566" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-567"><a href="#cb59-567" aria-hidden="true" tabindex="-1"></a>Videre koder vi hele landet som k0000.</span>
+<span id="cb59-568"><a href="#cb59-568" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-569"><a href="#cb59-569" aria-hidden="true" tabindex="-1"></a>For å finne antallet som både bor og jobber i RAL:</span>
+<span id="cb59-570"><a href="#cb59-570" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-571"><a href="#cb59-571" aria-hidden="true" tabindex="-1"></a>Videre legger vi RAL (p_bRALjRAL) inn i datasettet (pend_02_25).</span>
+<span id="cb59-572"><a href="#cb59-572" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-573"><a href="#cb59-573" aria-hidden="true" tabindex="-1"></a>For å kunne lage en fullstendig pendlematrise måtte vi også beregne antall personer som både bor og arbeider utenfor Bokna-regionen. Dette kunne ikke hentes direkte fra tabell 03321, og vi benyttet derfor toalt antall sysselsatte fra SSB-tabell 11616. Ved å trekke fra alle sysselsatte bosatt i Bokna-regionen og alle som bor utenfor regionen, men arbeider i den, fant vi antallet som både bor og arbeider i resten av landet.</span>
+<span id="cb59-574"><a href="#cb59-574" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-575"><a href="#cb59-575" aria-hidden="true" tabindex="-1"></a>Til slutt sjekker vi at ting ser greit ut ved å lage en foreløpig pendle-matrise for 2010.</span>
+<span id="cb59-576"><a href="#cb59-576" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-577"><a href="#cb59-577" aria-hidden="true" tabindex="-1"></a><span class="fu"># Andel pendlere</span></span>
+<span id="cb59-578"><a href="#cb59-578" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-579"><a href="#cb59-579" aria-hidden="true" tabindex="-1"></a><span class="fu"># Bo- og arbeidsmarkedsregioner NIBR/TØI 2020</span></span>
+<span id="cb59-580"><a href="#cb59-580" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-581"><a href="#cb59-581" aria-hidden="true" tabindex="-1"></a><span class="fu">## Pendling internt i region 49</span></span>
+<span id="cb59-582"><a href="#cb59-582" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-583"><a href="#cb59-583" aria-hidden="true" tabindex="-1"></a><span class="fu"># Bor og jobber i samme kommune i Bokna-regionen</span></span>
+<span id="cb59-584"><a href="#cb59-584" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-585"><a href="#cb59-585" aria-hidden="true" tabindex="-1"></a><span class="fu">## Internpendling i et utvalg kommuner</span></span>
+<span id="cb59-586"><a href="#cb59-586" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-587"><a href="#cb59-587" aria-hidden="true" tabindex="-1"></a><span class="fu">## Hvor jobber folk bosatt i Stavanger kommune?</span></span>
+<span id="cb59-588"><a href="#cb59-588" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-589"><a href="#cb59-589" aria-hidden="true" tabindex="-1"></a><span class="fu">## Hvor jobber folk bosatt i Sandnes kommune?</span></span>
+<span id="cb59-590"><a href="#cb59-590" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-591"><a href="#cb59-591" aria-hidden="true" tabindex="-1"></a><span class="fu">## Hvor jobber folk bosatt i Sola kommune?</span></span>
+<span id="cb59-592"><a href="#cb59-592" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-593"><a href="#cb59-593" aria-hidden="true" tabindex="-1"></a><span class="fu">## Hvor jobber folk bosatt i Klepp kommune?</span></span>
+<span id="cb59-594"><a href="#cb59-594" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-595"><a href="#cb59-595" aria-hidden="true" tabindex="-1"></a><span class="fu">## Hvor jobber folk bosatt i Haugesund kommune?</span></span>
+<span id="cb59-596"><a href="#cb59-596" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-597"><a href="#cb59-597" aria-hidden="true" tabindex="-1"></a><span class="fu">## Hvor jobber folk bosatt i Karmøy kommune?</span></span>
+<span id="cb59-598"><a href="#cb59-598" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-599"><a href="#cb59-599" aria-hidden="true" tabindex="-1"></a><span class="fu"># Pendlematriser</span></span>
+</code></pre></div><button title="Kopier til utklipstavle" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 

@@ -32,7 +32,7 @@ abstract: (kort sammendrag)
 ```{r}
 library(tidyverse)
 library(PxWebApiData)
-library(flextable)
+#library(flextable)
 ```
 
 # Innledning
