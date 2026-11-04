@@ -36,11 +36,12 @@ library(flextable)
 ```
 
 # Innledning
-Pendling er en viktig del av hvordan arbeidsmarkedet fungerer, og sier mye om hvor folk bor i forhold til der de jobber. I denne oppgaven undersøker vi pendling i kommunene rundt Boknafjorden fra 2002 til 2025. Innledningen bygger på bo- og arbeidsmarkedsregionene som NIBR/TØI publiserte i 2020. Området vi ser på består av seks slike regioner med til sammen 20 kommuner, og størrelsen varierer mye, fra Stavanger/Sandnes med ti kommuner til små regioner i Ryfylke med bare en. Alle kommuner utenfor området samler vi i en gruppe, "resten av landet" (RAL), slik at vi også får med pendlingen inn til og ut av regionen. 
 
-Data hentes direkte fra SSB, tabell 03321 og 11616, ved hjelp av en API gjennom pakken PxWebApiData. Et problem underveis er at flere kommuner har blitt slått sammen eller har fått nytt kommunenummer, blant annet ved kommunereformen i 2020. Vi har derfor tilpasset dataene til kommunestrukturen slik den er i 2025, så tallene kan sammenlignes over hele prioden. 
+Pendling er en viktig del av hvordan arbeidsmarkedet fungerer, og sier mye om hvor folk bor i forhold til der de jobber. I denne oppgaven undersøker vi pendling i kommunene rundt Boknafjorden fra 2002 til 2025. Innledningen bygger på bo- og arbeidsmarkedsregionene som NIBR/TØI publiserte i 2020. Området vi ser på består av seks slike regioner med til sammen 20 kommuner, og størrelsen varierer mye, fra Stavanger/Sandnes med ti kommuner til små regioner i Ryfylke med bare en. Alle kommuner utenfor området samler vi i en gruppe, "resten av landet" (RAL), slik at vi også får med pendlingen inn til og ut av regionen.
 
-Ut fra det lager vi et ryddig datasett med pendlingen mellom kommunene for alle årene. Datasettet bruker vi videre til å lage linjeplot over utviklingen, tabeller over hvor folk fra utvalgte kommuner jobber, og pendlematrisen for noen utvalgte år. 
+Data hentes direkte fra SSB, tabell 03321 og 11616, ved hjelp av en API gjennom pakken PxWebApiData. Et problem underveis er at flere kommuner har blitt slått sammen eller har fått nytt kommunenummer, blant annet ved kommunereformen i 2020. Vi har derfor tilpasset dataene til kommunestrukturen slik den er i 2025, så tallene kan sammenlignes over hele prioden.
+
+Ut fra det lager vi et ryddig datasett med pendlingen mellom kommunene for alle årene. Datasettet bruker vi videre til å lage linjeplot over utviklingen, tabeller over hvor folk fra utvalgte kommuner jobber, og pendlematrisen for noen utvalgte år.
 
 ## Bruk av KI
 
@@ -406,7 +407,7 @@ rm(boBF_arb_RAL, pend_02_25_arbBF, pend_02_25_boBF,
 
 # Totalt antall arbeidstakere i hele landet per år
 
-Vi har nå informasjon om alle som bor eller arbeider i Bokna-regionen, men vi magler en gruppe. Hvor mange personer både bor og arbeider i resten av landet (RAL)? Denne informasjonen får vi ikke lastet ned fra tabell 03321. Vi er derfor nå nødt til å hente data fra tabell 11616 fordi den gir oss data på fylkes-basis. Vi er bare interessert i totalt antall arbeidstakere per år.
+Vi har nå informasjon om alle som bor eller arbeider i Bokna-regionen, men vi magler en gruppe. Hvor mange personer både bor og arbeider i resten av landet (RAL)? Denne informasjonen får vi ikke lastet ned fra tabell 03321. Vi er derfor nå nødt til å hente data fra tabell 11616 fordi den gir oss data på fylkes-basis. Ved å kombinere disse tallene med pendledataene fra Boknafjord-regionen kan vi beregne hvor mange som både bor og arbeider i resten av landet (RAL).
 
 ```{r}
 # oppdatert med "31", "32", "33", "39", "40", "55", "56"
@@ -433,14 +434,14 @@ ApiData(
 ssb_11616 <- ApiData12(
   urlToData = "11616",
   Region = fnr, 
-  Kjonn = list("*"),
+  Kjonn = c("1", "2"),
   Alder = "15-74", 
   ContentsCode = "Sysselsatte personer bosatt i regionen",
   Tid = as.character(2002:2025)
 )
 ```
 
-Deretter bruker vi group_by( ) og summarise( ) for å summere antall sysselsatte per år.
+Deretter bruker vi group_by( ) og summarise( ) for å summere totalt antall sysselsatte per år.
 
 ```{r}
 tot_arb_HL <- ssb_11616 %>%
@@ -458,16 +459,14 @@ tot_arb_HL <- ssb_11616 %>%
 For å kontrollere resulatet lager vi en tibble med to variabler, "Tid" (årstall) og "arbtak_HL". Hvor toppen av tot_arb_HL skal se slik ut:
 
 ```{r}
-print(tot_arb_HL, n = 10)
-
-dim(tot_arb_HL)
+print(tot_arb_HL, n = 24)
 ```
 
-Disse tallene skal senere brukes til å beregne hvor mange som både bor og arbeider i resten av landet (RAL).
+Disse tallene brukes videre for å beregne antall personer som både bor og arbeider i resten av landet.
 
-## Bor i Bokna-regionen, jobber i HL
+## Bor i Bokna-regionen og jobber i HL
 
-Videre er vi nødt til å definere hele Bokna-regionen. Vektoren nedenfor inneholder kommunene i Bokna-regionen etter justering av kommuneinndelingen.
+Vi har nå funnet totalt antall sysselsatte i Norge. Neste steg er å finne antall sysselsatte som bor i Bokna-regionen, uavhengig av hvor de arbeider. Vi er da nødt til å definere hele Bokna-regionen. Vektoren nedenfor inneholder kommunene i Bokna-regionen etter justering av kommuneinndelingen.
 
 ```{r}
 BF <- c(knr_u_SSV, "k1103", "k1108", "k1160")
@@ -483,27 +482,308 @@ bBFjHL <- pend_02_25 %>%
   summarise(bBFjHL = sum(pendlere))
 ```
 
+```{r}
+print(bBFjHL, n = 24)
+```
+
 ## Bor i RAL jobber i Bokna-regionen
 
 Vi gjør tilsvarende for dem som jobber i Bokna-regionen, men bor utenfor regionen.
 
-Vi koder hele landet som k0000.
+```{r}
+# bor i RAL, jobber i Bokna-regionen
+bRALjBF <- pend_02_25 |>
+  filter(akom %in% BF, bkom == "k9999") |>
+  group_by(aar) |>
+  summarise(bRALjBF = sum(pendlere))
+```
+
+```{r}
+print(bRALjBF, n = 24)
+```
+
+Vi har nå beregnet antall sysselsatte som bor utenfor Boknafjord-regionen, men arbeider i en av kommunene innenfor regionen. Disse arbeidstakerne representerer innpendling fra resten av landet. Resultatet blir lagret i datasettet bRALjBF. Denne beregningen er nødvendig for å kunne finne antall sysselsatte som både bor og arbeider i resten av landet uten å telle personer dobbelt.
+
+```{r}
+tot_arb_HL <- left_join(
+  tot_arb_HL,
+  bBFjHL,
+  by = join_by(aar)
+)
+
+tot_arb_HL <- left_join(
+  tot_arb_HL,
+  bRALjBF,
+  by = join_by(aar)
+)
+```
+
+For å finne antall sysselsatte som både bor og arbeider i resten av landet, slo vi sammen datasettene tot_arb_HL, bBFjHL og bRALjBF ved hjelp av left_join().
+
+```{r}
+print(tot_arb_HL, n = 10)
+```
 
 ## Beregne RAL
 
-Nå setter vi sammen tot_arb_HL, bBFjHL (inkluderer bo BF og jobber BF) og bRALjBF (bor utenfor BF, jobber BF) til tot_arb_HL slik at vi kan regne ut antall som bor i RAL og jobber i RAL.
+For å finne antall sysselsatte som både bor og arbeider i resten av landet (RAL), slo vi sammen datasettene tot_arb_HL, bBFjHL og bRALjBF ved hjelp av le
 
-Videre koder vi hele landet som k0000.
+```{r}
+tot_arb_HL <- tot_arb_HL %>%
+  mutate(
+    bRALjRAL = arbtak_HL - bBFjHL - bRALjBF
+  )
+```
 
-For å finne antallet som både bor og jobber i RAL:
+Dette oppretter variabelen bRALjRAL. Vi trekker fra sysselsatte som bor i Bokna-regionen og sysselsatte som pendler inn fra resten av landet. Det som står igjen, er sysselsatte som både bor og arbeider i RAL.
 
-Videre legger vi RAL (p_bRALjRAL) inn i datasettet (pend_02_25).
+```{r}
+print(tot_arb_HL, n = 24)
+```
 
-For å kunne lage en fullstendig pendlematrise måtte vi også beregne antall personer som både bor og arbeider utenfor Bokna-regionen. Dette kunne ikke hentes direkte fra tabell 03321, og vi benyttet derfor toalt antall sysselsatte fra SSB-tabell 11616. Ved å trekke fra alle sysselsatte bosatt i Bokna-regionen og alle som bor utenfor regionen, men arbeider i den, fant vi antallet som både bor og arbeider i resten av landet.
+For å finne antallet som både bor og jobber i RAL gjør vi følgende. Resultatene blir lagret i datasettet p_bRALjRAL.
 
-Til slutt sjekker vi at ting ser greit ut ved å lage en foreløpig pendle-matrise for 2010.
+```{r}
+p_bRALjRAL <- tot_arb_HL %>%
+  transmute(
+    aar,
+    akom = "k9999",
+    akom_navn = "RAL",
+    bkom = "k9999",
+    bkom_navn = "RAL",
+    pendlere = bRALjRAL
+  )
+```
+
+```{r}
+print(p_bRALjRAL, n = 5)
+```
+
+```{r}
+pend_02_25 <- bind_rows(
+  pend_02_25,
+  p_bRALjRAL
+)
+```
+
+De beregnede verdiene for sysselsatte som både bor og arbeider i RAL ble deretter lagt til det eksisterende pendledatasettet ved hjelp av bind_rows(). Vi har dermed et samlet datasett som inkluderer pendling innenfor Boknafjord-regionen, pendling til og fra resten av landet, og sysselsatte som både bor og arbeider i RAL.
+
+```{r}
+pend_02_25 %>%
+  ungroup() %>%
+  filter(aar == "2010") %>%
+  select(bkom, akom, pendlere) %>%
+  pivot_wider(
+    names_from = akom,
+    values_from = pendlere
+  ) %>%
+  as_flextable(
+    max_row = 30,
+    show_coltype = FALSE
+  ) %>%
+  fontsize(size = 5, part = "all") %>%
+  colformat_int(big.mark = " ") %>%
+  delete_part("footer")
+```
+
+For å kontrollere resulatene genererte vi en pendlematrise for 2010, hvor bostedskommunene utgjør radene og arbeidsstedskommunene utgjør kolonnene.
+
+Etter å ha kontrollert pendlematrisen for 2010, beregner vi totalt antall sysselsatte etter bosteds- og arbeidsstedskommune. Dette er nødvendig for å kunne beregne pendleandeler i den videre analysen.
+
+Vi bruker group_by() og summarise() for å summere antall sysselsatte for hver kommune og hvert år. Totalene får kommunenummer k0000, slik at de kan skilles fra observasjonene ovenfor.
+
+```{r}
+totalt_arb <- pend_02_25 |>
+  group_by(aar, akom, akom_navn) |>
+  summarise(
+    pendlere = sum(pendlere),
+    .groups = "drop"
+  ) |>
+  mutate(
+    bkom = "k0000",
+    bkom_navn = "TotaltArb"
+  )
+```
+
+Denne koden beregner hvor mange sysselsatte som totalt arbeider i hver kommune, uavhengig av hvor de bor.
+
+```{r}
+totalt_bo <- pend_02_25 |>
+  group_by(aar, bkom, bkom_navn) |>
+  summarise(pendlere = sum(pendlere), .groups = 'drop') |>
+  mutate(
+    akom = "k0000",
+    akom_navn = "TotaltBo"
+  ) 
+```
+
+Videre beregner vi hvor mange sysselsatte som bor i hver kommune, uavhengig av hvor de arbeider.
+
+```{r}
+total <- tot_arb_HL %>%
+  select(
+    aar,
+    pendlere = arbtak_HL
+  ) %>%
+  mutate(
+    akom = "k0000",
+    akom_navn = "TotaltBo",
+    bkom = "k0000",
+    bkom_navn = "TotaltArb",
+    .before = pendlere
+  )
+```
+
+Vi oppretter så totalen for hele landet hvert år.
+
+```{r}
+pendle_data_02_25 <- bind_rows(
+  pend_02_25,
+  totalt_arb,
+  totalt_bo,
+  total
+) %>%
+  select(
+    aar,
+    akom,
+    akom_navn,
+    bkom,
+    bkom_navn,
+    pendlere
+  )
+```
+
+Til slutt legger vi til verdiene i det eksisterende Pendledatasettet ved hjelp av bind_rows(). Resultatet lagres i pendle_data_02_25, som nå inneholder både de enkelte pendlingsstrømmene og totalt antall sysselsatte etter bosted og arbeidssted.
+
+```{r}
+dim(pendle_data_02_25)
+
+names(pendle_data_02_25)
+
+print(pendle_data_02_25, n = 5)
+```
+
+Det ferdige datasettet består av 11 616 observasjoner og seks variabler, og danner grunnlaget for beregning av pendleandler i neste del av oppgaven.
 
 # Andel pendlere
+
+For å undersøke pendlemønsteret i Boknafjord-regionen beregner vi hvor stor andel av de sysselsatte bosatt i hver kommune som arbeider i de ulike kommunene.
+
+Vi tar utgangspunkt i datasettet pendle_data_02_25, som inneholder både pendlingsstrømmene og totalt antall sysselsatte etter bosted og arbeidssted. Ved hjelp av pivot_wider( ) og across ( ) beregner vi pendleandelene i prosent. Deretter omformer vi datasettet til long-format, slik at det kan brukes til videre analyser.
+
+```{r}
+andel_pendle_data_02_25 <- pendle_data_02_25 %>%
+  unite(knrN, akom, akom_navn) %>%
+  group_by(aar, bkom, bkom_navn) %>%
+  pivot_wider(
+    names_from = knrN,
+    values_from = pendlere
+  ) %>%
+  as_tibble() %>%
+  mutate(
+    across(
+      .cols = k1103_Stavanger:k0000_TotaltBo,
+      # standard anonym funksjon
+      .fns = function(x) round(
+        (x / k0000_TotaltBo) * 100,
+        digits = 4
+      )
+    )
+  ) %>%
+  ungroup()
+```
+
+```{r}
+dim(andel_pendle_data_02_25)
+```
+
+```{r}
+names(andel_pendle_data_02_25)
+```
+
+Vi benyttet pivot_wider( ) for å gjøre arbeidsstedskommunene om til egne kolonner. Deretter brukte vi across( ) og en anonym funksjon til å beregne pendleandelene. Resultatet ble lagret i andel_pendle_data_02_25, som inneholder 528 observasjoner og 25 variabler.
+
+```{r}
+tab <- andel_pendle_data_02_25 |> 
+  filter(aar == 2017) |> 
+  select(-aar, -bkom_navn)
+
+
+names(tab) <- str_replace_all(names(tab), "_", "\n")
+
+tab |> 
+  as_flextable(
+    show_coltype = FALSE,
+    max_row = 30
+  ) |> 
+  rotate(rotation = "tbrl", part = "header") |> 
+  line_spacing(space = 0.5, part = "body") |> 
+  colformat_double(big.mark = ' ', digits = 2) |> 
+  fontsize(size = 5, part = "all") |> 
+  set_table_properties(width = 0.25, layout = "autofit") |> 
+  padding(padding = 3) |> 
+  delete_part("footer")
+```
+
+For å kontrollere beregningene laget vi en pendlematrise for 2017. Matrisen viser hvor stor andel av de sysselsatte bosatt i hver kommune som arbeider i de ulike kommunene. Bostedskommunene er vist som rader, mens arbeidsstedskommunene er vist som kolonner. Prosentandelene er beregnet med utgangspunkt i totalt antall sysselsatte bosatt i hver kommune.
+
+```{r}
+andel_pendle_data_02_25_long <-
+  andel_pendle_data_02_25 %>%
+  pivot_longer(
+    cols = k1103_Stavanger:k0000_TotaltBo,
+    names_to = c("akom", "akom_navn"),
+    names_sep = "_",
+    values_to = "andel"
+  ) %>%
+  select(
+    aar,
+    akom,
+    akom_navn,
+    bkom,
+    bkom_navn,
+    andel
+  )
+```
+
+```{r}
+dim(andel_pendle_data_02_25_long)
+```
+
+```{r}
+names(andel_pendle_data_02_25_long)
+```
+
+```{r}
+print(
+  andel_pendle_data_02_25_long,
+  n = 8,
+  width = 70
+)
+```
+
+Etter å ha beregnet pendleandelene omformet vi datasettet fra wide-format til long-format ved hjelp av pivot_longer( ). Arbeidsstedskommunene ble dermed samlet i egne variabler for kommunenummer og kommunenavn, mens prosentandelene ble samlet i variabelen andel.
+
+Datasettet inneholder nå 11 616 observasjoner og seks variabler. Denne strukturen gjør det enklere å undersøke utviklingen i pendleandeler over tid og lage linjediagrammer for ulike kommuner.
+
+```{r}
+andel_pendle_data_02_25_long <-
+  andel_pendle_data_02_25_long %>%
+  mutate(
+    aar = dmy(paste0("01-01-", aar))
+  )
+```
+
+```{r}
+print(
+  andel_pendle_data_02_25_long,
+  n = 6
+)
+```
+
+Til slutt endret vi variabelen aar til datoformat ved hjelp av dmy( ). Dette gjør det mulig å fremstille utviklingen i pendleandeler over tid i ggplot( ).
+
+Datasettet er da klart for videre analyser av pendling mellom kommune og bo- og arbeidsmarkedsregionene.
 
 # Bo- og arbeidsmarkedsregioner NIBR/TØI 2020
 
