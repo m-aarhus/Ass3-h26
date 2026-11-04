@@ -32,7 +32,7 @@ abstract: (kort sammendrag)
 ```{r}
 library(tidyverse)
 library(PxWebApiData)
-#library(flextable)
+library(flextable)
 ```
 
 # Innledning
@@ -457,6 +457,7 @@ print(tot_arb_HL, n = 10)
 dim(tot_arb_HL)
 ```
 
+
 Disse tallene skal senere brukes til å beregne hvor mange som både bor og arbeider i resten av landet (RAL).
 
 ## Bor i Bokna-regionen, jobber i HL
@@ -500,6 +501,71 @@ Til slutt sjekker vi at ting ser greit ut ved å lage en foreløpig pendle-matri
 # Andel pendlere
 
 # Bo- og arbeidsmarkedsregioner NIBR/TØI 2020
+```{r}
+reg49 <- c("k1103","k1108","k1124","k1127","k1120",
+           "k1122","k1121","k1119","k1144","k1130")
+reg50 <- c("k1106","k1146","k1149","k4612","k1145")
+reg55 <- c("k1160","k4611")
+
+ba_kode <- function(k) {
+  case_when(
+    k %in% reg49 ~ "49", k %in% reg50 ~ "50",
+    k == "k1133" ~ "51", k == "k1134" ~ "52",
+    k == "k1135" ~ "53", k %in% reg55 ~ "55",
+    TRUE ~ "99"
+  )
+}
+```
+
+```{r}
+pend_02_25 |>
+  filter(aar == "2010") |>
+  mutate(ba_reg_bo  = paste0("bo",  ba_kode(bkom)),
+         ba_reg_arb = paste0("arb", ba_kode(akom))) |>
+  group_by(ba_reg_bo, ba_reg_arb) |>
+  summarise(pendlere = sum(pendlere), .groups = "drop") |>
+  pivot_wider(names_from = ba_reg_arb, values_from = pendlere)
+```
+
+```{r}
+matrise_reg49 <- function(y) {
+  pend_02_25 |>
+    filter(aar == as.character(y)) |>
+    mutate(akom = if_else(akom %in% reg49, akom, "k9999"),
+           bkom = if_else(bkom %in% reg49, bkom, "k9999")) |>
+    group_by(bkom, akom) |>
+    summarise(pendlere = sum(pendlere), .groups = "drop") |>
+    mutate(across(c(akom, bkom), ~ str_remove(.x, "k"))) |>
+    arrange(akom) |>
+    pivot_wider(names_from = akom, values_from = pendlere) |>
+    arrange(bkom)
+}
+
+m15 <- matrise_reg49(2015)
+m15
+```
+
+```{r}
+#| label: tbl-reg49-2015
+#| tbl-cap: "Bo- og arbeidsmarkedsmatrise for region 49 for året 2015. Kommunene utenfor regionen er samlet i 9999."
+m15 |>
+  as_flextable(show_coltype = FALSE) |>
+  colformat_int(big.mark = " ") |>
+  fontsize(size = 7, part = "all") |>
+  delete_part("footer")
+```
+
+```{r}
+#| label: tbl-reg49-2020
+#| tbl-cap: "Bo- og arbeidsmarkedsmatrise for region 49 for året 2020."
+m20 <- matrise_reg49(2020)
+
+m20 |>
+  as_flextable(show_coltype = FALSE) |>
+  colformat_int(big.mark = " ") |>
+  fontsize(size = 7, part = "all") |>
+  delete_part("footer")
+```
 
 ## Pendling internt i region 49
 
