@@ -501,6 +501,8 @@ Til slutt sjekker vi at ting ser greit ut ved å lage en foreløpig pendle-matri
 # Andel pendlere
 
 # Bo- og arbeidsmarkedsregioner NIBR/TØI 2020
+
+Vi strater med å definere hvilke kommuner som hører til de ulike bo- og arbeidsmarkedsregionene. Deretter lager vi funksjonen ba-kode(), som gir hver kommune riktig regionnummer. Kommuner som ikke er med i noen av regionene får koden 99, som står for resten av landet.
 ```{r}
 reg49 <- c("k1103","k1108","k1124","k1127","k1120",
            "k1122","k1121","k1119","k1144","k1130")
@@ -517,6 +519,7 @@ ba_kode <- function(k) {
 }
 ```
 
+Her bruker vi ba_kode() til å gi både bosted og arbeidssted et regionnummer. Vi summerer antall pendlere mellom regionenen for 2010 og gjør tabellen om til wide-format. Radene viser hvor folk bor, og kolonnene viser hvor de jobber.
 ```{r}
 pend_02_25 |>
   filter(aar == "2010") |>
@@ -527,6 +530,7 @@ pend_02_25 |>
   pivot_wider(names_from = ba_reg_arb, values_from = pendlere)
 ```
 
+Vi lager en funksjon som gir oss pendematrisen for region 49 for et valgt år. Kommunene utenfor regionen slås sammen med 9999. Funksjonen gjør det enkelt å lage den samme matrisen for flere år, og vi bruker den først for 2015.
 ```{r}
 matrise_reg49 <- function(y) {
   pend_02_25 |>
@@ -545,6 +549,7 @@ m15 <- matrise_reg49(2015)
 m15
 ```
 
+Tabellen under viser pendlematrisen for region 49 i 2015. Hver rad viser hvor de som bor i en kommune jobber, og hver kolonne viser hvor de som jobber i en kommune bor. 
 ```{r}
 #| label: tbl-reg49-2015
 #| tbl-cap: "Bo- og arbeidsmarkedsmatrise for region 49 for året 2015. Kommunene utenfor regionen er samlet i 9999."
@@ -555,6 +560,7 @@ m15 |>
   delete_part("footer")
 ```
 
+Vi bruker den samme funksjonen til å lage pendlematrisen for 2020. Denne matrisen bruker vi ti å svare på spørsmålene under. 
 ```{r}
 #| label: tbl-reg49-2020
 #| tbl-cap: "Bo- og arbeidsmarkedsmatrise for region 49 for året 2020."
@@ -566,6 +572,61 @@ m20 |>
   fontsize(size = 7, part = "all") |>
   delete_part("footer")
 ```
+Her henter vi ut tallene vi trenger fra matrisen for 2020. Vi finner hvor mange som bor i Sola og jobber i Kvitsøy, og hvor mange som bor utenfor regionen og jobber i Sandnes. Til slutt sammenligner vi hvor mange som pendler ut av og inn til hver kommune, for å finne kommunene med flere utpendlere enn innpendlere. 
+```{r}
+# 1. Bor Sola, jobber Kvitsøy
+sola_kvitsoy <- m20 |> filter(bkom == "1124") |> pull(`1144`)
+
+# 2. Bor utenfor region 49, jobber Sandnes
+inn_sandnes <- m20 |> filter(bkom == "9999") |> pull(`1108`)
+
+# 3. Flere pendler ut enn inn
+ut  <- m20 |> filter(bkom != "9999") |> select(knr = bkom, ut = `9999`)
+inn <- m20 |> filter(bkom == "9999") |> select(-bkom, -`9999`) |>
+  pivot_longer(everything(), names_to = "knr", values_to = "inn")
+ut_inn <- left_join(ut, inn, by = "knr") |> filter(ut > inn)
+
+sola_kvitsoy
+inn_sandnes
+ut_inn
+```
+I 2020 bodde `r sola_kvitsoy` personer i Sola og jobbet i Kvitsøy, mens `r inn_sandnes` personer bosatt utenfor region 49 jobbet i Sandnes.
+
+Kommunene Hå, Klepp, Time, Gjesdal, Randaberg og Strand hadde flere arbeidstakere som pendlet ut av regionen enn det var arbeidstakere utenfor regionen som pendlet inn. Dette er mindre kommuner hvor mange bor, men hvor det er færre arbeidsplasser som trekker folk inn utenfra. Kommuner som Stavanger, Sandnes og Sola har derimot mange arbeidsplasser og trekker til seg flere pendlere fra resten av landet.
+
+Vi lager to funksjoner som skal brukes i resten av oppgaven. tab_pendlere () lager en tabell over kommunene hvor størst andel av de som bor i en valgt kommune jobber. plot_pendlere () lager et linjeplot som viser hvordan disse andelene har utviklet seg over tid. Med funksjonene slipper vi å skrive den samme koden for hver kommune. 
+
+```{r}
+tab_pendlere <- function(data, knr, y = 2003, n = 6) {
+  data = filter(data, bkom == knr)
+  data = filter(data, !akom %in% c(knr, "k0000"))
+  data = filter(data, year(aar) == y)
+  data = arrange(data, desc(andel))
+  data = head(data, n = n)
+  data = select(data, `Place of work` = akom_navn, `Prop. in %` = andel)
+  flxtab = as_flextable(data, show_coltype = FALSE, max_row = 30)
+  flxtab = delete_part(flxtab, "footer")
+  flxtab = theme_booktabs(flxtab)
+  flxtab = line_spacing(flxtab, space = 0.3)
+}
+
+plot_pendlere <- function(data, knr, grense = 1, lw = 1) {
+  data |>
+    filter(bkom == knr, !akom %in% c(knr, "k0000")) |>
+    group_by(akom) |>
+    filter(max(andel) > grense) |>
+    ungroup() |>
+    ggplot(aes(x = aar, y = andel, group = akom_navn, colour = akom_navn)) +
+    geom_line(linewidth = lw) +
+    labs(x = NULL, y = "Andel i %", colour = "Arbeidssted")
+}
+```
+
+```{r}
+#apd_0225_l <- andel_pendle_data_02_25_long
+#rm(andel_pendle_data_02_25_long)
+```
+
 
 ## Pendling internt i region 49
 
