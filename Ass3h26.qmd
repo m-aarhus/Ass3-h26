@@ -63,15 +63,8 @@ class(knr); length(knr)
 ```
 
 ```{r}
-knavn <- c("Sandnes (-2019)", "Stavanger", "Nye-Sandnes", 
-           "Sola", "Randaberg", "Klepp", "Gjesdal", "Time", 
-           "Hå", "Kvitsøy", "Strand", "Haugesund", "Tysvær", 
-           "Karmøy", "Sveio (-2019)", "Sveio", "Bokn", 
-           "Hjelmeland", "Suldal", "Sauda", "Vindafjord (-2006)", 
-           "Vindafjord", "Etne (-2019)", "Etne", 
-           "Forsand (-2019)", "Finnøy (-2020)",
-           "Rennesøy (-2020)"
-)
+# knavn <- c("Sandnes (-2019)", "Stavanger", "Nye-Sandnes", "Sola", "Randaberg", "Klepp", "Gjesdal", "Time", "Hå", "Kvitsøy", "Strand", "Haugesund", "Tysvær", "Karmøy", "Sveio (-2019)", "Sveio", "Bokn", "Hjelmeland", "Suldal", "Sauda", "Vindafjord (-2006)", "Vindafjord", "Etne (-2019)", "Etne", "Forsand (-2019)", "Finnøy (-2020)", "Rennesøy (-2020)")
+#)
 ```
 
 # Hente data fra SSB
