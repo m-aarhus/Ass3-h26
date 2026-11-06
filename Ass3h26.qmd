@@ -32,7 +32,7 @@ abstract: (kort sammendrag)
 ```{r}
 library(tidyverse)
 library(PxWebApiData)
-#library(flextable)
+library(flextable)
 ```
 
 # Innledning
@@ -63,15 +63,8 @@ class(knr); length(knr)
 ```
 
 ```{r}
-knavn <- c("Sandnes (-2019)", "Stavanger", "Nye-Sandnes", 
-           "Sola", "Randaberg", "Klepp", "Gjesdal", "Time", 
-           "Hå", "Kvitsøy", "Strand", "Haugesund", "Tysvær", 
-           "Karmøy", "Sveio (-2019)", "Sveio", "Bokn", 
-           "Hjelmeland", "Suldal", "Sauda", "Vindafjord (-2006)", 
-           "Vindafjord", "Etne (-2019)", "Etne", 
-           "Forsand (-2019)", "Finnøy (-2020)",
-           "Rennesøy (-2020)"
-)
+# knavn <- c("Sandnes (-2019)", "Stavanger", "Nye-Sandnes", "Sola", "Randaberg", "Klepp", "Gjesdal", "Time", "Hå", "Kvitsøy", "Strand", "Haugesund", "Tysvær", "Karmøy", "Sveio (-2019)", "Sveio", "Bokn", "Hjelmeland", "Suldal", "Sauda", "Vindafjord (-2006)", "Vindafjord", "Etne (-2019)", "Etne", "Forsand (-2019)", "Finnøy (-2020)", "Rennesøy (-2020)")
+#)
 ```
 
 # Hente data fra SSB
@@ -787,22 +780,325 @@ Datasettet er da klart for videre analyser av pendling mellom kommune og bo- og 
 
 # Bo- og arbeidsmarkedsregioner NIBR/TØI 2020
 
-## Pendling internt i region 49
+Vi strater med å definere hvilke kommuner som hører til de ulike bo- og arbeidsmarkedsregionene. Deretter lager vi funksjonen ba-kode(), som gir hver kommune riktig regionnummer. Kommuner som ikke er med i noen av regionene får koden 99, som står for resten av landet.
+
+```{r}
+reg49 <- c("k1103","k1108","k1124","k1127","k1120",
+           "k1122","k1121","k1119","k1144","k1130")
+reg50 <- c("k1106","k1146","k1149","k4612","k1145")
+reg55 <- c("k1160","k4611")
+
+ba_kode <- function(k) {
+  case_when(
+    k %in% reg49 ~ "49", k %in% reg50 ~ "50",
+    k == "k1133" ~ "51", k == "k1134" ~ "52",
+    k == "k1135" ~ "53", k %in% reg55 ~ "55",
+    TRUE ~ "99"
+  )
+}
+```
+
+Her bruker vi ba_kode() til å gi både bosted og arbeidssted et regionnummer. Vi summerer antall pendlere mellom regionenen for 2010 og gjør tabellen om til wide-format. Radene viser hvor folk bor, og kolonnene viser hvor de jobber.
+
+```{r}
+pend_02_25 |>
+  filter(aar == "2010") |>
+  mutate(ba_reg_bo  = paste0("bo",  ba_kode(bkom)),
+         ba_reg_arb = paste0("arb", ba_kode(akom))) |>
+  group_by(ba_reg_bo, ba_reg_arb) |>
+  summarise(pendlere = sum(pendlere), .groups = "drop") |>
+  pivot_wider(names_from = ba_reg_arb, values_from = pendlere)
+```
+
+##Pendling internt i region 49
+Vi lager en funksjon som gir oss pendematrisen for region 49 for et valgt år. Kommunene utenfor regionen slås sammen med 9999. Funksjonen gjør det enkelt å lage den samme matrisen for flere år, og vi bruker den først for 2015.
+
+```{r}
+matrise_reg49 <- function(y) {
+  pend_02_25 |>
+    filter(aar == as.character(y)) |>
+    mutate(akom = if_else(akom %in% reg49, akom, "k9999"),
+           bkom = if_else(bkom %in% reg49, bkom, "k9999")) |>
+    group_by(bkom, akom) |>
+    summarise(pendlere = sum(pendlere), .groups = "drop") |>
+    mutate(across(c(akom, bkom), ~ str_remove(.x, "k"))) |>
+    arrange(akom) |>
+    pivot_wider(names_from = akom, values_from = pendlere) |>
+    arrange(bkom)
+}
+
+m15 <- matrise_reg49(2015)
+m15
+```
+
+### Pendlematrisen for region 49 (stavanger/Sandnes) 2015
+Tabellen under viser pendlematrisen for region 49 i 2015. Hver rad viser hvor de som bor i en kommune jobber, og hver kolonne viser hvor de som jobber i en kommune bor.
+
+```{r}
+#| label: tbl-reg49-2015
+#| tbl-cap: "Bo- og arbeidsmarkedsmatrise for region 49 for året 2015. Kommunene utenfor regionen er samlet i 9999."
+m15 |>
+  as_flextable(show_coltype = FALSE) |>
+  colformat_int(big.mark = " ") |>
+  fontsize(size = 7, part = "all") |>
+  delete_part("footer")
+```
+### Pendlematrisen for region 49 (stavanger/Sandnes) 2020
+Vi bruker den samme funksjonen til å lage pendlematrisen for 2020. Denne matrisen bruker vi ti å svare på spørsmålene under. 
+
+```{r}
+#| label: tbl-reg49-2020
+#| tbl-cap: "Bo- og arbeidsmarkedsmatrise for region 49 for året 2020."
+m20 <- matrise_reg49(2020)
+
+m20 |>
+  as_flextable(show_coltype = FALSE) |>
+  colformat_int(big.mark = " ") |>
+  fontsize(size = 7, part = "all") |>
+  delete_part("footer")
+```
+
+Her henter vi ut tallene vi trenger fra matrisen for 2020. Vi finner hvor mange som bor i Sola og jobber i Kvitsøy, og hvor mange som bor utenfor regionen og jobber i Sandnes. Til slutt sammenligner vi hvor mange som pendler ut av og inn til hver kommune, for å finne kommunene med flere utpendlere enn innpendlere. 
+
+```{r}
+# 1. Bor Sola, jobber Kvitsøy
+sola_kvitsoy <- m20 |> filter(bkom == "1124") |> pull(`1144`)
+
+# 2. Bor utenfor region 49, jobber Sandnes
+inn_sandnes <- m20 |> filter(bkom == "9999") |> pull(`1108`)
+
+# 3. Flere pendler ut enn inn
+ut  <- m20 |> filter(bkom != "9999") |> select(knr = bkom, ut = `9999`)
+inn <- m20 |> filter(bkom == "9999") |> select(-bkom, -`9999`) |>
+  pivot_longer(everything(), names_to = "knr", values_to = "inn")
+ut_inn <- left_join(ut, inn, by = "knr") |> filter(ut > inn)
+
+sola_kvitsoy
+inn_sandnes
+ut_inn
+```
+
+I 2020 bodde `r sola_kvitsoy` personer i Sola og jobbet i Kvitsøy, mens `r inn_sandnes` personer bosatt utenfor region 49 jobbet i Sandnes.
+
+Kommunene Hå, Klepp, Time, Gjesdal, Randaberg og Strand hadde flere arbeidstakere som pendlet ut av regionen enn det var arbeidstakere utenfor regionen som pendlet inn. Dette er mindre kommuner hvor mange bor, men hvor det er færre arbeidsplasser som trekker folk inn utenfra. Kommuner som Stavanger, Sandnes og Sola har derimot mange arbeidsplasser og trekker til seg flere pendlere fra resten av landet.
+
+Vi lager to funksjoner som skal brukes i resten av oppgaven. tab_pendlere () lager en tabell over kommunene hvor størst andel av de som bor i en valgt kommune jobber. plot_pendlere () lager et linjeplot som viser hvordan disse andelene har utviklet seg over tid. Med funksjonene slipper vi å skrive den samme koden for hver kommune. 
+
+```{r}
+tab_pendlere <- function(data, knr, y = 2003, n = 6) {
+  data = filter(data, bkom == knr)
+  data = filter(data, !akom %in% c(knr, "k0000"))
+  data = filter(data, year(aar) == y)
+  data = arrange(data, desc(andel))
+  data = head(data, n = n)
+  data = select(data, `Place of work` = akom_navn, `Prop. in %` = andel)
+  flxtab = as_flextable(data, show_coltype = FALSE, max_row = 30)
+  flxtab = delete_part(flxtab, "footer")
+  flxtab = theme_booktabs(flxtab)
+  flxtab = line_spacing(flxtab, space = 0.3)
+}
+
+plot_pendlere <- function(data, knr, grense = 1, lw = 1) {
+  data |>
+    filter(bkom == knr, !akom %in% c(knr, "k0000")) |>
+    group_by(akom) |>
+    filter(max(andel) > grense) |>
+    ungroup() |>
+    ggplot(aes(x = aar, y = andel, group = akom_navn, colour = akom_navn)) +
+    geom_line(linewidth = lw) +
+    labs(x = NULL, y = "Andel i %", colour = "Arbeidssted")
+}
+```
+
+```{r}
+#apd_0225_l <- andel_pendle_data_02_25_long
+#rm(andel_pendle_data_02_25_long)
+```
+
 
 # Bor og jobber i samme kommune i Bokna-regionen
+Vi lager et linjeplot som viser hvor stor andel av arbeidstakerne i hver kommune som både bor og jobber i samme kommune fra 2002 til 2025. Vi filtrerer ut radene der bosted og arbeidssted er like, og tar bort totalen og resten av landet. 
+
+```{r}
+#| eval: false
+#| label: fig-internpendling
+#| fig-cap: "Andel som bor og jobber i samme kommune, 2002–2025."
+apd_0225_l |>
+  filter(akom == bkom, !akom %in% c("k0000", "k9999")) |>
+  ggplot(aes(x = aar, y = andel, group = akom_navn, colour = akom_navn)) +
+  geom_line(linewidth = 0.8) +
+  labs(x = NULL, y = "Andel i %", colour = "Kommune")
+```
+Den generelle trenden er at andelen som bor og jobber i samme kommune har gått ned i de fleste kommunene. I Stavanger har andelen falt fra rundt 73% i 2002 til 67% i 2025, og i Hå fra rundt 63% til 55%. Utviklingen går altså ikke i retning av at folk bor nærmere der de jobber. Tvert imot pendler flere over kommunegrensene nå enn før. Det kan henge sammen med bedre veier, mer kollektivtransport og at mange velger å bo i nabokommuner med lavere boligpriser. 
+
+Tabellen viser andelen arbeidstakere som jobber i samme kommune som de bor i, for 2025. Kommunene er sortert fra høyest til lavest andel.
+
+```{r}
+#| eval: false
+#| label: tbl-internpendling-2025
+#| tbl-cap: "Andelen av arbeidstakere som jobber i samme kommune som de bor i, 2025."
+apd_0225_l |>
+  filter(year(aar) == 2025, akom == bkom, akom != "k9999") |>
+  arrange(desc(andel)) |>
+  rename(Bosted = bkom_navn) |>
+  as_flextable(max_row = 30, show_coltype = FALSE) |>
+  colformat_double(digits = 1)
+```
+
 
 ## Internpendling i et utvalg kommuner
+Vi ser nærmere på fem kommuner: Hjemeland, Hå, Kvitsøy, Stavanger og Strand. Plottet viser hvordan andelen som bor og jobber i samme kommune har utviklet seg i disse kommunene. 
+
+```{r}
+#| eval: false
+#| label: fig-internpendling-utvalg
+#| fig-cap: "Internpendling i Hjelmeland, Hå, Kvitsøy, Stavanger og Strand."
+apd_0225_l |>
+  filter(akom == bkom,
+         akom_navn %in% c("Hjelmeland", "Hå", "Kvitsøy", "Stavanger", "Strand")) |>
+  ggplot(aes(x = aar, y = andel, group = akom_navn, colour = akom_navn)) +
+  geom_line(linewidth = 1) +
+  labs(x = NULL, y = "Andel i %", colour = "Kommune")
+```
+
+Ideen om å jobbe nær hjemmet ser ikke ut til å ha fått gjennomslag. I alle de fem kommunene er andelen som bor og jobber i samme kommune lavere i 2025 enn i 2002. Størst nedgang ser vi i Hjelmeland, fra rundt 80 % til 69 %, mens Strand har holdt seg mer stabil. Selv om det grønne skiftet oppfordrer til kortere reisevei, pendler stadig flere ut av kommunen sin for å jobbe.
 
 ## Hvor jobber folk bosatt i Stavanger kommune?
+Vi så at 67,4 % av arbeidstakerne bosatt i Stavanger også jobbet i Stavanger i 2025. Her ser vi på hvor de som pendler ut av kommunen jobber. Plottet viser utviklingen i andelen som jobber i ulike kommuner, for kommuner med en andel over 1 %.
+
+```{r}
+#| eval: false
+#| label: fig-stavanger
+#| fig-cap: "Hvor arbeidstakere bosatt i Stavanger jobber, 2002–2025."
+plot_pendlere(apd_0225_l, "k1103", grense = 1, lw = 1.25) +
+  ylim(0, 12)
+```
+
+Tabellen viser de fem kommunene utenom Stavanger hvor størst andel av arbeidstakerne bosatt i Stavanger jobbet i 2025.
+
+```{r}
+#| eval: false
+#| label: tbl-1103pend
+#| tbl-cap: "Andelene som pendler ut av Stavanger i 2025."
+tab_pendlere(apd_0225_l, "k1103", y = 2025, n = 5) |>
+  colformat_double(digits = 1)
+```
+
+Andelen som både bor og jobber i samme kommune har gått ned i begge byene. I Stavanger var andelen 73,1 % i 2002 og 67,4 % i 2025, en nedgang på 5,7 prosentpoeng. I Sandnes var andelen 48,9 % i 2002 og 44,3 % i 2025, en nedgang på 4,6 prosentpoeng. Stavanger har altså en mye høyere andel som jobber i egen kommune enn Sandnes, men begge byene går i retning av at flere pendler ut av kommunen.
+
 
 ## Hvor jobber folk bosatt i Sandnes kommune?
+Vi så at bare 44,3 % av arbeidstakerne bosatt i Sandnes jobbet i egen kommune i 2025. Plottet viser hvor de som pendler ut av Sandnes jobber, og hvordan dette har utviklet seg fra 2002 til 2025. Vi tar med kommuner med en andel over 1,7 %.
+
+```{r}
+#| eval: false
+#| label: fig-sandnes
+#| fig-cap: "Hvor arbeidstakere bosatt i Sandnes jobber, 2002–2025."
+plot_pendlere(apd_0225_l, "k1108", grense = 1.7, lw = 1.25)
+```
+
+Tabellene viser de fem kommunene hvor størst andel av arbeidstakerne bosatt i Sandnes jobbet i 2002, 2013 og 2025.
+
+```{r}
+#| eval: false
+#| label: tbl-1108pend-2002
+#| tbl-cap: "Andelene som pendler ut av Sandnes i 2002."
+tab_pendlere(apd_0225_l, "k1108", y = 2002, n = 5) |>
+  colformat_double(digits = 1)
+```
+
+```{r}
+#| eval: false
+#| label: tbl-1108pend-2013
+#| tbl-cap: "Andelene som pendler ut av Sandnes i 2013."
+tab_pendlere(apd_0225_l, "k1108", y = 2013, n = 5) |>
+  colformat_double(digits = 1)
+```
+
+```{r}
+#| eval: false
+#| label: tbl-1108pend-2025
+#| tbl-cap: "Andelene som pendler ut av Sandnes i 2025."
+tab_pendlere(apd_0225_l, "k1108", y = 2025, n = 5) |>
+  colformat_double(digits = 1)
+```
+
+De fleste som pendler ut av Sandnes jobber i Stavanger (rundt 28 % i 2025), mens Sola har blitt et viktigere arbeidssted og økt fra rundt 7 % til 11 %. Andelen som bor og jobber i Sandnes har gått ned fra 48,9 % i 2002 til 44,3 % i 2025. Forskjellen fra Stavanger kan forklares med at Stavanger er regionsenteret med flest arbeidsplasser, mens Sandnes har flere boligområder og lavere boligpriser. Mange bor derfor i Sandnes og pendler til Stavanger eller Forus, så Sandnes fungerer mye som en bokommune for regionen. 
+
 
 ## Hvor jobber folk bosatt i Sola kommune?
 
+38,2 % av arbeidstakerne bosatt i Sola jobbet i egen kommune i 2025. Plottet viser hvor de som pendler ut av Sola jobber, og tabellen viser de fem viktigste arbeidsstedene i 2025.
+
+```{r}
+#| eval: false
+#| label: fig-sola
+#| fig-cap: "Hvor arbeidstakere bosatt i Sola jobber, 2002–2025."
+plot_pendlere(apd_0225_l, "k1124", grense = 1, lw = 1.25)
+```
+
+```{r}
+#| eval: false
+#| label: tbl-1124pend
+#| tbl-cap: "Andelene som pendler ut av Sola kommune i 2025."
+tab_pendlere(apd_0225_l, "k1124", y = 2025, n = 5) |>
+  colformat_double(digits = 1)
+```
+
 ## Hvor jobber folk bosatt i Klepp kommune?
+Klepp ligger mellom Sandnes og Bryne, og bare 33,5 % av arbeidstakerne bosatt i Klepp jobbet i egen kommune i 2025. Plottet viser hvor de som pendler ut av Klepp jobber, og tabellen viser de fem viktigste arbeidsstedene i 2025.
+
+```{r}
+#| eval: false
+#| label: fig-klepp
+#| fig-cap: "Hvor arbeidstakere bosatt i Klepp jobber, 2002–2025."
+plot_pendlere(apd_0225_l, "k1120", grense = 1, lw = 1.25)
+```
+
+```{r}
+#| eval: false
+#| label: tbl-1120pend
+#| tbl-cap: "Andelene som pendler ut av Klepp kommune i 2025."
+tab_pendlere(apd_0225_l, "k1120", y = 2025, n = 5) |>
+  colformat_double(digits = 1)
+```
+
+Andelen som bor og jobber i Klepp har gått ned fra rundt 40 % i 2002 til 33,5 % i 2025, samtidig som antall arbeidstakere bosatt i kommunen har økt mye. Utpendlingen er spredt på flere kommuner: Sandnes, Stavanger og Time er de viktigste arbeidsstedene, og Sola har blitt viktigere over tid. Klepp har dermed utviklet seg til en typisk bokommune, der mange bor og pendler til jobb i nabokommunene.
 
 ## Hvor jobber folk bosatt i Haugesund kommune?
+Plottet viser hvor arbeidstakere bosatt i Haugesund jobber, og hvordan dette har utviklet seg fra 2002 til 2025. Tabellen viser de fem viktigste arbeidsstedene utenom Haugesund i 2025.
+
+```{r}
+#| eval: false
+#| label: fig-haugesund
+#| fig-cap: "Hvor arbeidstakere bosatt i Haugesund jobber, 2002–2025."
+plot_pendlere(apd_0225_l, "k1106", grense = 1, lw = 1.25)
+```
+
+```{r}
+#| eval: false
+#| label: tbl-1106pend
+#| tbl-cap: "Pendling ut av Haugesund kommune i 2025."
+tab_pendlere(apd_0225_l, "k1106", y = 2025, n = 5) |>
+  colformat_double(digits = 1)
+```
 
 ## Hvor jobber folk bosatt i Karmøy kommune?
+Plottet viser hvor arbeidstakere bosatt på Karmøy jobber, og hvordan dette har utviklet seg fra 2002 til 2025. Tabellen viser de viktigste arbeidsstedene utenom Karmøy i 2025.
+
+```{r}
+#| eval: false
+#| label: fig-karmoy
+#| fig-cap: "Hvor arbeidstakere bosatt på Karmøy jobber, 2002–2025."
+plot_pendlere(apd_0225_l, "k1149", grense = 1, lw = 1.25)
+```
+
+```{r}
+#| eval: false
+#| label: tbl-1149pend
+#| tbl-cap: "Pendling ut av Karmøy kommune i 2025."
+tab_pendlere(apd_0225_l, "k1149", y = 2025, n = 6) |>
+  colformat_double(digits = 1)
+```
 
 # Pendlematriser
