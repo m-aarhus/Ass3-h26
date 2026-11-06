@@ -911,8 +911,8 @@ plot_pendlere <- function(data, knr, grense = 1, lw = 1) {
 ```
 
 ```{r}
-#apd_0225_l <- andel_pendle_data_02_25_long
-#rm(andel_pendle_data_02_25_long)
+apd_0225_l <- andel_pendle_data_02_25_long
+rm(andel_pendle_data_02_25_long)
 ```
 
 
@@ -920,7 +920,7 @@ plot_pendlere <- function(data, knr, grense = 1, lw = 1) {
 Vi lager et linjeplot som viser hvor stor andel av arbeidstakerne i hver kommune som både bor og jobber i samme kommune fra 2002 til 2025. Vi filtrerer ut radene der bosted og arbeidssted er like, og tar bort totalen og resten av landet. 
 
 ```{r}
-#| eval: false
+#| eval: true
 #| label: fig-internpendling
 #| fig-cap: "Andel som bor og jobber i samme kommune, 2002–2025."
 apd_0225_l |>
@@ -934,7 +934,7 @@ Den generelle trenden er at andelen som bor og jobber i samme kommune har gått 
 Tabellen viser andelen arbeidstakere som jobber i samme kommune som de bor i, for 2025. Kommunene er sortert fra høyest til lavest andel.
 
 ```{r}
-#| eval: false
+#| eval: true
 #| label: tbl-internpendling-2025
 #| tbl-cap: "Andelen av arbeidstakere som jobber i samme kommune som de bor i, 2025."
 apd_0225_l |>
@@ -950,7 +950,7 @@ apd_0225_l |>
 Vi ser nærmere på fem kommuner: Hjemeland, Hå, Kvitsøy, Stavanger og Strand. Plottet viser hvordan andelen som bor og jobber i samme kommune har utviklet seg i disse kommunene. 
 
 ```{r}
-#| eval: false
+#| eval: true
 #| label: fig-internpendling-utvalg
 #| fig-cap: "Internpendling i Hjelmeland, Hå, Kvitsøy, Stavanger og Strand."
 apd_0225_l |>
@@ -967,7 +967,7 @@ Ideen om å jobbe nær hjemmet ser ikke ut til å ha fått gjennomslag. I alle d
 Vi så at 67,4 % av arbeidstakerne bosatt i Stavanger også jobbet i Stavanger i 2025. Her ser vi på hvor de som pendler ut av kommunen jobber. Plottet viser utviklingen i andelen som jobber i ulike kommuner, for kommuner med en andel over 1 %.
 
 ```{r}
-#| eval: false
+#| eval: true
 #| label: fig-stavanger
 #| fig-cap: "Hvor arbeidstakere bosatt i Stavanger jobber, 2002–2025."
 plot_pendlere(apd_0225_l, "k1103", grense = 1, lw = 1.25) +
@@ -977,7 +977,7 @@ plot_pendlere(apd_0225_l, "k1103", grense = 1, lw = 1.25) +
 Tabellen viser de fem kommunene utenom Stavanger hvor størst andel av arbeidstakerne bosatt i Stavanger jobbet i 2025.
 
 ```{r}
-#| eval: false
+#| eval: true
 #| label: tbl-1103pend
 #| tbl-cap: "Andelene som pendler ut av Stavanger i 2025."
 tab_pendlere(apd_0225_l, "k1103", y = 2025, n = 5) |>
@@ -991,7 +991,7 @@ Andelen som både bor og jobber i samme kommune har gått ned i begge byene. I S
 Vi så at bare 44,3 % av arbeidstakerne bosatt i Sandnes jobbet i egen kommune i 2025. Plottet viser hvor de som pendler ut av Sandnes jobber, og hvordan dette har utviklet seg fra 2002 til 2025. Vi tar med kommuner med en andel over 1,7 %.
 
 ```{r}
-#| eval: false
+#| eval: true
 #| label: fig-sandnes
 #| fig-cap: "Hvor arbeidstakere bosatt i Sandnes jobber, 2002–2025."
 plot_pendlere(apd_0225_l, "k1108", grense = 1.7, lw = 1.25)
@@ -1000,7 +1000,7 @@ plot_pendlere(apd_0225_l, "k1108", grense = 1.7, lw = 1.25)
 Tabellene viser de fem kommunene hvor størst andel av arbeidstakerne bosatt i Sandnes jobbet i 2002, 2013 og 2025.
 
 ```{r}
-#| eval: false
+#| eval: true
 #| label: tbl-1108pend-2002
 #| tbl-cap: "Andelene som pendler ut av Sandnes i 2002."
 tab_pendlere(apd_0225_l, "k1108", y = 2002, n = 5) |>
@@ -1008,7 +1008,7 @@ tab_pendlere(apd_0225_l, "k1108", y = 2002, n = 5) |>
 ```
 
 ```{r}
-#| eval: false
+#| eval: true
 #| label: tbl-1108pend-2013
 #| tbl-cap: "Andelene som pendler ut av Sandnes i 2013."
 tab_pendlere(apd_0225_l, "k1108", y = 2013, n = 5) |>
@@ -1016,7 +1016,7 @@ tab_pendlere(apd_0225_l, "k1108", y = 2013, n = 5) |>
 ```
 
 ```{r}
-#| eval: false
+#| eval: true
 #| label: tbl-1108pend-2025
 #| tbl-cap: "Andelene som pendler ut av Sandnes i 2025."
 tab_pendlere(apd_0225_l, "k1108", y = 2025, n = 5) |>
@@ -1031,14 +1031,14 @@ De fleste som pendler ut av Sandnes jobber i Stavanger (rundt 28 % i 2025), mens
 38,2 % av arbeidstakerne bosatt i Sola jobbet i egen kommune i 2025. Plottet viser hvor de som pendler ut av Sola jobber, og tabellen viser de fem viktigste arbeidsstedene i 2025.
 
 ```{r}
-#| eval: false
+#| eval: true
 #| label: fig-sola
 #| fig-cap: "Hvor arbeidstakere bosatt i Sola jobber, 2002–2025."
 plot_pendlere(apd_0225_l, "k1124", grense = 1, lw = 1.25)
 ```
 
 ```{r}
-#| eval: false
+#| eval: true
 #| label: tbl-1124pend
 #| tbl-cap: "Andelene som pendler ut av Sola kommune i 2025."
 tab_pendlere(apd_0225_l, "k1124", y = 2025, n = 5) |>
@@ -1049,14 +1049,14 @@ tab_pendlere(apd_0225_l, "k1124", y = 2025, n = 5) |>
 Klepp ligger mellom Sandnes og Bryne, og bare 33,5 % av arbeidstakerne bosatt i Klepp jobbet i egen kommune i 2025. Plottet viser hvor de som pendler ut av Klepp jobber, og tabellen viser de fem viktigste arbeidsstedene i 2025.
 
 ```{r}
-#| eval: false
+#| eval: true
 #| label: fig-klepp
 #| fig-cap: "Hvor arbeidstakere bosatt i Klepp jobber, 2002–2025."
 plot_pendlere(apd_0225_l, "k1120", grense = 1, lw = 1.25)
 ```
 
 ```{r}
-#| eval: false
+#| eval: true
 #| label: tbl-1120pend
 #| tbl-cap: "Andelene som pendler ut av Klepp kommune i 2025."
 tab_pendlere(apd_0225_l, "k1120", y = 2025, n = 5) |>
@@ -1069,14 +1069,14 @@ Andelen som bor og jobber i Klepp har gått ned fra rundt 40 % i 2002 til 33,5 %
 Plottet viser hvor arbeidstakere bosatt i Haugesund jobber, og hvordan dette har utviklet seg fra 2002 til 2025. Tabellen viser de fem viktigste arbeidsstedene utenom Haugesund i 2025.
 
 ```{r}
-#| eval: false
+#| eval: true
 #| label: fig-haugesund
 #| fig-cap: "Hvor arbeidstakere bosatt i Haugesund jobber, 2002–2025."
 plot_pendlere(apd_0225_l, "k1106", grense = 1, lw = 1.25)
 ```
 
 ```{r}
-#| eval: false
+#| eval: true
 #| label: tbl-1106pend
 #| tbl-cap: "Pendling ut av Haugesund kommune i 2025."
 tab_pendlere(apd_0225_l, "k1106", y = 2025, n = 5) |>
@@ -1087,14 +1087,14 @@ tab_pendlere(apd_0225_l, "k1106", y = 2025, n = 5) |>
 Plottet viser hvor arbeidstakere bosatt på Karmøy jobber, og hvordan dette har utviklet seg fra 2002 til 2025. Tabellen viser de viktigste arbeidsstedene utenom Karmøy i 2025.
 
 ```{r}
-#| eval: false
+#| eval: true
 #| label: fig-karmoy
 #| fig-cap: "Hvor arbeidstakere bosatt på Karmøy jobber, 2002–2025."
 plot_pendlere(apd_0225_l, "k1149", grense = 1, lw = 1.25)
 ```
 
 ```{r}
-#| eval: false
+#| eval: true
 #| label: tbl-1149pend
 #| tbl-cap: "Pendling ut av Karmøy kommune i 2025."
 tab_pendlere(apd_0225_l, "k1149", y = 2025, n = 6) |>
