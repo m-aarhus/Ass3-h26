@@ -43,8 +43,6 @@ Data hentes direkte fra SSB, tabell 03321 og 11616, ved hjelp av en API gjennom 
 
 Ut fra det lager vi et ryddig datasett med pendlingen mellom kommunene for alle årene. Datasettet bruker vi videre til å lage linjeplot over utviklingen, tabeller over hvor folk fra utvalgte kommuner jobber, og pendlematrisen for noen utvalgte år.
 
-## Bruk av KI
-
 ## Kommuner i Bokna-regionen
 
 Vi starter med å definere kommunene som inngår i Bokna-regionen. Datasettet omfatter både tidligere og nåværende kommunenummer, ettersom det har vært flere kommunesammenslåinger og endringer i kommuneinndelingen i perioden 2002-2025. Ved å inkludere de tidligere kommunene kan vi senere aggregere dataene til en felles kommunestruktur, som vil gjøre utviklingen over tid mer sammenlignbar.
