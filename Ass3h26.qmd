@@ -1108,3 +1108,132 @@ tab_pendlere(apd_0225_l, "k1149", y = 2025, n = 6) |>
 ```
 
 # Pendlematriser
+
+Pendlematrise for 2002
+
+```{r}
+#| label: tbl-pendlematrise-2002
+#| tbl-cap: "Pendlematrise år 2002."
+
+pendle_data_02_25 |>
+  ungroup() |>
+  filter(aar == "2002") |>
+  select(bkom, akom, pendlere) |>
+  arrange(bkom == "k0000", bkom, akom == "k0000", akom) |>
+  pivot_wider(
+    names_from = akom,
+    values_from = pendlere
+  ) |>
+  as_flextable(max_row = 30, show_coltype = FALSE) |>
+  delete_part(part = "footer") |>
+  theme_booktabs() |>
+  colformat_int(big.mark = "\u00A0") |>
+  fontsize(size = 5, part = "all") |>
+  padding(padding = 1, part = "all") |>
+  autofit() |>
+  set_table_properties(layout = "fixed")
+```
+
+Pendlematrise for 2005
+
+```{r}
+#| label: tbl-pendlematrise-2005
+#| tbl-cap: "Pendlematrise år 2005."
+
+pendle_data_02_25 |>
+  ungroup() |>
+  filter(aar == "2005") |>
+  select(bkom, akom, pendlere) |>
+  arrange(bkom == "k0000", bkom, akom == "k0000", akom) |>
+  pivot_wider(
+    names_from = akom,
+    values_from = pendlere
+  ) |>
+  as_flextable(max_row = 30, show_coltype = FALSE) |>
+  delete_part(part = "footer") |>
+  theme_booktabs() |>
+  colformat_int(big.mark = "\u00A0") |>
+  fontsize(size = 5, part = "all") |>
+  padding(padding = 1, part = "all") |>
+  autofit() |>
+  set_table_properties(layout = "fixed")
+```
+
+Pendlematrise for 2015
+
+```{r}
+#| label: tbl-pendlematrise-2015
+#| tbl-cap: "Pendlematrise år 2015."
+
+pendle_data_02_25 |>
+  ungroup() |>
+  filter(aar == "2015") |>
+  select(bkom, akom, pendlere) |>
+  arrange(bkom == "k0000", bkom, akom == "k0000", akom) |>
+  pivot_wider(
+    names_from = akom,
+    values_from = pendlere
+  ) |>
+  as_flextable(max_row = 30, show_coltype = FALSE) |>
+  delete_part(part = "footer") |>
+  theme_booktabs() |>
+  colformat_int(big.mark = "\u00A0") |>
+  fontsize(size = 5, part = "all") |>
+  padding(padding = 1, part = "all") |>
+  autofit() |>
+  set_table_properties(layout = "fixed")
+```
+
+Pendlematrise for 2020
+
+```{r}
+#| label: tbl-pendlematrise-2020
+#| tbl-cap: "Pendlematrise år 2020."
+
+pendle_data_02_25 |>
+  ungroup() |>
+  filter(aar == "2020") |>
+  select(bkom, akom, pendlere) |>
+  arrange(bkom == "k0000", bkom, akom == "k0000", akom) |>
+  pivot_wider(
+    names_from = akom,
+    values_from = pendlere
+  ) |>
+  as_flextable(max_row = 30, show_coltype = FALSE) |>
+  delete_part(part = "footer") |>
+  theme_booktabs() |>
+  colformat_int(big.mark = "\u00A0") |>
+  fontsize(size = 5, part = "all") |>
+  padding(padding = 1, part = "all") |>
+  autofit() |>
+  set_table_properties(layout = "fixed")
+```
+
+Pendlematrise for 2025
+
+```{r}
+#| label: tbl-pendlematrise-2025
+#| tbl-cap: "Pendlematrise år 2025."
+
+pendle_data_02_25 |>
+  ungroup() |>
+  filter(aar == "2025") |>
+  select(bkom, akom, pendlere) |>
+  arrange(bkom == "k0000", bkom, akom == "k0000", akom) |>
+  pivot_wider(
+    names_from = akom,
+    values_from = pendlere
+  ) |>
+  as_flextable(max_row = 30, show_coltype = FALSE) |>
+  delete_part(part = "footer") |>
+  theme_booktabs() |>
+  colformat_int(big.mark = "\u00A0") |>
+  fontsize(size = 5, part = "all") |>
+  padding(padding = 1, part = "all") |>
+  autofit() |>
+  set_table_properties(layout = "fixed")
+```
+
+# Bruk av KI
+
+Vi har brukt ChatGPT som KI verktøy gjennom denne oppgaven for å blant annet sette sammen ulike chunker når vi sitter fast, ved feilmeldinger når chunker genereres og ved tabellformatering på best mulig måte.
